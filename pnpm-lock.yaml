@@ -8,6 +8,7 @@ overrides:
   three: 0.187.0
   '@types/three': 0.187.0
   '@dimforge/rapier3d-compat': 0.11.2
+  '@zylem/game-lib': link:../zylem/packages/game-lib
 
 importers:
 
@@ -32,14 +33,14 @@ importers:
         specifier: ^0.9.9
         version: 0.9.9(@zylem/game-lib@0.9.7(howler@2.2.4)(nanoid@5.1.16)(three@0.187.0)(valtio@2.3.2))
       '@zylem/game-lib':
-        specifier: ^0.9.7
+        specifier: link:../zylem/packages/game-lib
         version: 0.9.7(howler@2.2.4)(nanoid@5.1.16)(three@0.187.0)(valtio@2.3.2)
       '@zylem/shaders':
         specifier: ^0.1.2
         version: 0.1.2(three@0.187.0)
       '@zylem/ui':
-        specifier: ^0.9.4
-        version: 0.9.4(solid-js@1.9.14)
+        specifier: ^0.9.5
+        version: 0.9.5(solid-js@1.9.14)
       comlink:
         specifier: ^4.4.2
         version: 4.4.2
@@ -175,6 +176,10 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
+
+  '@babel/runtime@7.29.10':
+    resolution: {integrity: sha512-NpugTzbKgGrNe45Ui32cN8vCFFMxVtP/9rtfwv0nP5FRDAjvYBxJcLVpYA9mr1jxP6cnIT7x9LUzuDTbWYYNRA==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.29.7':
     resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
@@ -1027,8 +1032,8 @@ packages:
     peerDependencies:
       three: 0.187.0
 
-  '@zylem/ui@0.9.4':
-    resolution: {integrity: sha512-3aYhVFBfxr+EKCd+hAZ7Zmj3R7kUUh+QAgcsdyuTgSxcAIA56CzvHvFVJWVPFmCyXBF7JgjVKZWitCPErSPsPQ==}
+  '@zylem/ui@0.9.5':
+    resolution: {integrity: sha512-glJyD6b/YFBPMTVeoCyvymwwIJsXVH5JQ00vMsqGulRFFZRd0XeyLZKLkWs/04Clb5ze/lQC1MqPP6D6qiUoLA==}
     engines: {node: '>=22.12.0', pnpm: '>=10.32.1'}
     peerDependencies:
       solid-js: ^1.9.9
@@ -1529,14 +1534,17 @@ packages:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
 
-  tone@15.5.57:
-    resolution: {integrity: sha512-sRdRh8MGzYjnPkWoR+Y0dUSI8nkpZQ+rtPGyyD5BzEYvCcmyPJIgC3Fw+XnrDiqb8BgRqwicr/4TV0gL1DzelQ==}
+  tone@15.5.66:
+    resolution: {integrity: sha512-IfhfkkdIOncjSQa8efsDWK38myptQEcV77B+vB9MA/b2sldHdBx4wE64YLdyxtZVuJxvFwn8nj7X6QvchxSN9A==}
 
   tsl-textures@3.0.4:
     resolution: {integrity: sha512-M3JdmRaDb4LxJIZ9u5MEAVDcjTFa7hGT1U9N4vdfBurAPkCrp/u2FKgiEHLNLPQ3RirI16X25DFgFKI2Rnv9hQ==}
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
+  tslib@2.9.1:
+    resolution: {integrity: sha512-a4Ux9VKuIMHsOS7ENbEq6hK2ZGYIT27Rtl0E4eD9KqwxhKiQeMZE/9xb3IdYwWaSOyIBQLExhQgXDTYoiCxnWA==}
 
   typescript-fsm@1.6.0:
     resolution: {integrity: sha512-wmDVbIZ/iyytlNOLdwyvLTdnArSZw48IwjbHuIcZo+DA2do27pOM+hZJsjPzcQ0ux/lzkZ1i1PPfP16GOGPYuQ==}
@@ -1798,6 +1806,8 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
+
+  '@babel/runtime@7.29.10': {}
 
   '@babel/runtime@7.29.7': {}
 
@@ -2464,7 +2474,7 @@ snapshots:
       '@solidjs/router': 0.14.10(solid-js@1.9.14)
       '@zylem/bridge': 0.9.7
       '@zylem/game-lib': 0.9.7(howler@2.2.4)(nanoid@5.1.16)(three@0.187.0)(valtio@2.3.2)
-      '@zylem/ui': 0.9.4(solid-js@1.9.14)
+      '@zylem/ui': 0.9.5(solid-js@1.9.14)
       lucide-solid: 1.55.0(solid-js@1.9.14)
       solid-js: 1.9.14
       valtio: 2.3.2
@@ -2487,7 +2497,7 @@ snapshots:
       nanoid: 5.1.16
       stats.js: 0.17.0
       three: 0.187.0
-      tone: 15.5.57
+      tone: 15.5.66
       typescript-fsm: 1.6.0
       valtio: 2.3.2
     transitivePeerDependencies:
@@ -2501,7 +2511,7 @@ snapshots:
       three: 0.187.0
       tsl-textures: 3.0.4
 
-  '@zylem/ui@0.9.4(solid-js@1.9.14)':
+  '@zylem/ui@0.9.5(solid-js@1.9.14)':
     dependencies:
       '@kobalte/core': 0.13.14(solid-js@1.9.14)
       '@vanilla-extract/css': 1.21.2
@@ -2517,8 +2527,8 @@ snapshots:
 
   automation-events@7.1.19:
     dependencies:
-      '@babel/runtime': 7.29.7
-      tslib: 2.8.1
+      '@babel/runtime': 7.29.10
+      tslib: 2.9.1
 
   babel-plugin-jsx-dom-expressions@0.40.7(@babel/core@7.29.7):
     dependencies:
@@ -2973,9 +2983,9 @@ snapshots:
 
   standardized-audio-context@25.3.77:
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 7.29.10
       automation-events: 7.1.19
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   stats.js@0.17.0: {}
 
@@ -2988,14 +2998,16 @@ snapshots:
       fdir: 6.5.0(picomatch@4.0.5)
       picomatch: 4.0.5
 
-  tone@15.5.57:
+  tone@15.5.66:
     dependencies:
       standardized-audio-context: 25.3.77
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   tsl-textures@3.0.4: {}
 
   tslib@2.8.1: {}
+
+  tslib@2.9.1: {}
 
   typescript-fsm@1.6.0: {}
 

@@ -44,7 +44,7 @@
     "@zylem/editor": "^0.9.9",
     "@zylem/game-lib": "^0.9.7",
     "@zylem/shaders": "^0.1.2",
-    "@zylem/ui": "^0.9.4",
+    "@zylem/ui": "^0.9.5",
     "comlink": "^4.4.2",
     "howler": "^2.2.4",
     "nanoid": "^5.1.5",
@@ -71,7 +71,8 @@
     "overrides": {
       "three": "0.187.0",
       "@types/three": "0.187.0",
-      "@dimforge/rapier3d-compat": "0.11.2"
+      "@dimforge/rapier3d-compat": "0.11.2",
+      "@zylem/game-lib": "link:../zylem/packages/game-lib"
     },
     "onlyBuiltDependencies": [
       "esbuild",
