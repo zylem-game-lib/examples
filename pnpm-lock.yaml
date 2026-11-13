@@ -26,20 +26,20 @@ importers:
         specifier: ^0.8.13
         version: 0.8.13(three@0.187.0)
       '@zylem/bridge':
-        specifier: ^0.9.9
-        version: 0.9.9
+        specifier: ^0.9.10
+        version: 0.9.10
       '@zylem/editor':
-        specifier: ^0.9.10
-        version: 0.9.10(@zylem/game-lib@0.9.10(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))
+        specifier: ^0.9.11
+        version: 0.9.11(@zylem/game-lib@0.9.11(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))
       '@zylem/game-lib':
-        specifier: ^0.9.10
-        version: 0.9.10(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
+        specifier: ^0.9.11
+        version: 0.9.11(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
       '@zylem/shaders':
         specifier: ^0.8.10
         version: 0.8.10(three@0.187.0)
       '@zylem/ui':
-        specifier: ^0.9.10
-        version: 0.9.10(solid-js@1.9.14)
+        specifier: ^0.9.11
+        version: 0.9.11(solid-js@1.9.14)
       comlink:
         specifier: ^4.4.2
         version: 4.4.2
@@ -636,6 +636,21 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
+  '@recast-navigation/core@0.44.0':
+    resolution: {integrity: sha512-N4YO9JBXrGFf3LkrhXmABa7pEwLHvq/gq6o7pLKKu5A4JAp+A5y/9424ps3cVpO1m7ibh3zlXmeewTut9LeXQw==}
+
+  '@recast-navigation/generators@0.44.0':
+    resolution: {integrity: sha512-i2N/sCfuq7IJcSuMmHuX2Uer6oonr9PzFZTrPpwS/e2t+ZpVLHb3DHFY9evKrL2X8diO7sDUDBOpTfW/4Nwucw==}
+
+  '@recast-navigation/three@0.44.0':
+    resolution: {integrity: sha512-7PYy9sAJMK66+0g87xJ4x+jUL9Lv4DrtOwXrJYo1W5YB29f6HjSTVGXw5LooPgqqQcf+RUpoeQaSSul0cvVw/A==}
+    peerDependencies:
+      '@types/three': 0.187.0
+      three: 0.187.0
+
+  '@recast-navigation/wasm@0.44.0':
+    resolution: {integrity: sha512-VNv7xv50cFCdsGd2LdQWZqtLcWXB7nyi4Ilq9t5GMn3GEfCmJEbbeZWSXX5Mgdc4yj71QueTv15V7hPDAQ9gaw==}
+
   '@rolldown/binding-android-arm64@1.2.1':
     resolution: {integrity: sha512-02hOeOSryYxVrOIphmLAsqnCJWxwlzFk+pEt/N/i6OgT3lShHO7xGCU5cpgchRDHboAEbSjzgGh+O/u1GswQmA==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -1018,17 +1033,17 @@ packages:
     peerDependencies:
       three: 0.187.0
 
-  '@zylem/bridge@0.9.9':
-    resolution: {integrity: sha512-ox66i3uXnxu34kpPQbbHxmV2QJhrOlyfagyLlU9SZTlVSo5sia70XkJF7WwCAm3B54N9KzLZlAHV3qYY3uXftw==}
+  '@zylem/bridge@0.9.10':
+    resolution: {integrity: sha512-7QTzNug2Fed+lmVPeNPQgcZaU93ucykXwtfIrGYWUHNTh0C6p2RGuOGq883Mp64Br5OIDSpXDrwN6aNPf3cJKA==}
 
-  '@zylem/editor@0.9.10':
-    resolution: {integrity: sha512-KO//mNjeNNKZfFCzZzH0iYi8Ow6iju/8XtJPqPNR5i1VXlPi3QpSUhBsnVyOHwfOtPLZ4hEYiu/U/aiFOxlLDw==}
+  '@zylem/editor@0.9.11':
+    resolution: {integrity: sha512-muhM/zctM2T8S7fCh3RUcSAfTw3IvipR6Qe+BDsfMct/6m0rybrNabaRi3f4YyKDc2EC5lyIf4pW+giF+3BkYQ==}
     engines: {node: '>=22.12.0', pnpm: '>=10.32.1'}
     peerDependencies:
-      '@zylem/game-lib': ^0.9.9
+      '@zylem/game-lib': ^0.9.11
 
-  '@zylem/game-lib@0.9.10':
-    resolution: {integrity: sha512-+WQIUAjOatj5xEO8ollXDdYUCqj986rKiTGHoh8JAc7NkxM34cxWLBqASa4l6wUs929RV7d5XaP5BPrwueYdlA==}
+  '@zylem/game-lib@0.9.11':
+    resolution: {integrity: sha512-KTkEVt+U5vfflAFLW/BJ3bIIPZb7tlU4RFCmVWdbB6VtUJEKgV8EZe+0Qeu5jwBNCgkbA06pChsIYwBMe9EnjA==}
     peerDependencies:
       howler: ^2.2.4
       nanoid: ^5.1.5
@@ -1045,8 +1060,8 @@ packages:
     peerDependencies:
       three: 0.187.0
 
-  '@zylem/ui@0.9.10':
-    resolution: {integrity: sha512-EaQSHQLSJsyZCyw4ERp8wcJYynhIGYbpw/H2netk71lPgslE4L2hU5JlP6afuKUmeKB6XdZzfRVR62jEux7N5Q==}
+  '@zylem/ui@0.9.11':
+    resolution: {integrity: sha512-B9stZSfCguJLoK3UG4AOT9p4b2z9aSy3H4XEaU13B073od7/mNOlNlOPjxrhOeprRqmCL97xPEm4rDr1bqm3dA==}
     engines: {node: '>=22.12.0', pnpm: '>=10.32.1'}
     peerDependencies:
       solid-js: ^1.9.9
@@ -1449,6 +1464,9 @@ packages:
 
   pure-rand@7.0.1:
     resolution: {integrity: sha512-oTUZM/NAZS8p7ANR3SHh30kXB+zK2r2BPcEn/awJIbOvq82WoMN4p62AWWp3Hhw50G0xMsw1mhIBLqHw64EcNQ==}
+
+  recast-navigation@0.44.0:
+    resolution: {integrity: sha512-Qu5ETIZZo69uk3lvjJpdgopPUFp95dTmKljckjpSdL1IbdX26837R8j4nC2oHT6tEKViVwkIvy9Zbzyxr27GiQ==}
 
   require-like@0.1.2:
     resolution: {integrity: sha512-oyrU88skkMtDdauHDuKVrgR+zuItqr6/c//FXzvmxRGMexSDc6hNvJInGW3LL46n+8b50RykrvwSUIIQH2LQ5A==}
@@ -2143,6 +2161,24 @@ snapshots:
     dependencies:
       playwright: 1.62.1
 
+  '@recast-navigation/core@0.44.0':
+    dependencies:
+      '@recast-navigation/wasm': 0.44.0
+
+  '@recast-navigation/generators@0.44.0':
+    dependencies:
+      '@recast-navigation/core': 0.44.0
+      '@recast-navigation/wasm': 0.44.0
+
+  '@recast-navigation/three@0.44.0(@types/three@0.187.0)(three@0.187.0)':
+    dependencies:
+      '@recast-navigation/core': 0.44.0
+      '@recast-navigation/generators': 0.44.0
+      '@types/three': 0.187.0
+      three: 0.187.0
+
+  '@recast-navigation/wasm@0.44.0': {}
+
   '@rolldown/binding-android-arm64@1.2.1':
     optional: true
 
@@ -2499,15 +2535,15 @@ snapshots:
       - '@types/react'
       - react
 
-  '@zylem/bridge@0.9.9': {}
+  '@zylem/bridge@0.9.10': {}
 
-  '@zylem/editor@0.9.10(@zylem/game-lib@0.9.10(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))':
+  '@zylem/editor@0.9.11(@zylem/game-lib@0.9.11(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))':
     dependencies:
       '@kobalte/core': 0.13.14(solid-js@1.9.14)
       '@solidjs/router': 0.14.10(solid-js@1.9.14)
-      '@zylem/bridge': 0.9.9
-      '@zylem/game-lib': 0.9.10(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
-      '@zylem/ui': 0.9.10(solid-js@1.9.14)
+      '@zylem/bridge': 0.9.10
+      '@zylem/game-lib': 0.9.11(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
+      '@zylem/ui': 0.9.11(solid-js@1.9.14)
       lucide-solid: 1.71.0(solid-js@1.9.14)
       solid-js: 1.9.14
       valtio: 2.3.2
@@ -2516,18 +2552,20 @@ snapshots:
       - babel-plugin-macros
       - react
 
-  '@zylem/game-lib@0.9.10(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)':
+  '@zylem/game-lib@0.9.11(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)':
     dependencies:
       '@dgreenheck/three-pinata': 2.0.1(three@0.187.0)
+      '@recast-navigation/three': 0.44.0(@types/three@0.187.0)(three@0.187.0)
       '@sinclair/typebox': 0.34.52
       '@types/howler': 2.2.13
       '@zylem/behaviors': 0.8.13(three@0.187.0)
-      '@zylem/bridge': 0.9.9
+      '@zylem/bridge': 0.9.10
       comlink: 4.4.2
       howler: 2.2.4
       idb-keyval: 6.3.0
       msgpackr: 1.12.1
       nanoid: 5.1.16
+      recast-navigation: 0.44.0
       stats.js: 0.17.0
       three: 0.187.0
       tone: 15.5.66
@@ -2537,6 +2575,7 @@ snapshots:
       '@playcanvas/splat-transform': 3.10.3(playcanvas@2.23.3)
     transitivePeerDependencies:
       - '@types/react'
+      - '@types/three'
       - playcanvas
       - react
       - supports-color
@@ -2549,7 +2588,7 @@ snapshots:
       three: 0.187.0
       tsl-textures: 3.0.5
 
-  '@zylem/ui@0.9.10(solid-js@1.9.14)':
+  '@zylem/ui@0.9.11(solid-js@1.9.14)':
     dependencies:
       '@kobalte/core': 0.13.14(solid-js@1.9.14)
       '@vanilla-extract/css': 1.21.2
@@ -2915,6 +2954,11 @@ snapshots:
   proxy-compare@3.0.1: {}
 
   pure-rand@7.0.1: {}
+
+  recast-navigation@0.44.0:
+    dependencies:
+      '@recast-navigation/core': 0.44.0
+      '@recast-navigation/generators': 0.44.0
 
   require-like@0.1.2: {}
 
