@@ -51,15 +51,29 @@ Local engine iteration uses the polyrepo manager (`zw link`) against sibling che
 
 ## Scripts
 
-| Script                  | Description                   |
-| ----------------------- | ----------------------------- |
-| `pnpm dev`              | Vite playground               |
-| `pnpm build`            | Production SPA → `dist/`      |
-| `pnpm test:e2e`         | Playwright e2e                |
-| `pnpm screenshot:local` | Capture demo screenshots      |
-| `pnpm server:start`     | Start SpacetimeDB             |
-| `pnpm server:dev`       | Build + publish local modules |
-| `pnpm render:build`     | Render static-site build      |
+| Script                               | Description                    |
+| ------------------------------------ | ------------------------------ |
+| `pnpm dev`                           | Vite playground                |
+| `pnpm build`                         | Production SPA → `dist/`       |
+| `pnpm test:e2e`                      | Playwright e2e                 |
+| `pnpm screenshot:local`              | Capture every demo screenshot  |
+| `pnpm screenshot:local -- --missing` | Capture demos that have no PNG |
+| `pnpm screenshot:local -- <id>`      | Capture one demo               |
+| `pnpm server:start`                  | Start SpacetimeDB              |
+| `pnpm server:dev`                    | Build + publish local modules  |
+| `pnpm render:build`                  | Render static-site build       |
+
+## Screenshots
+
+`pnpm screenshot:local` starts the Vite app when it is not already running and writes `screenshots/<id>.png`. Pass `--missing` to skip demos that already have a file, or a demo id to capture just that one.
+
+Pushing to `main` runs `.github/workflows/screenshots.yml`, which captures every demo and uploads the PNGs to the R2 bucket behind `assets.zylem.cloud` at `examples/previews/<id>.png`. The job does not commit the files. It needs these Actions secrets:
+
+- `CLOUDFLARE_API_TOKEN` — account token with R2 edit on the bucket
+- `CLOUDFLARE_ACCOUNT_ID`
+- `R2_BUCKET` — the bucket name behind `assets.zylem.cloud`
+
+The Render static site reads them from `https://assets.zylem.cloud/examples/previews` (`VITE_EXAMPLES_PREVIEW_CDN_BASE_URL` in `render.yaml`). A local `pnpm dev` keeps using the PNGs in `screenshots/`.
 
 ## Deploy (Render)
 

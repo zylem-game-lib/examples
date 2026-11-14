@@ -39,6 +39,8 @@ services:
     envVars:
       - key: VITE_STDB_URI
         value: https://zylem-spacetimedb-api.onrender.com
+      - key: VITE_EXAMPLES_PREVIEW_CDN_BASE_URL
+        value: https://assets.zylem.cloud/examples/previews
     routes:
       - type: rewrite
         source: /*

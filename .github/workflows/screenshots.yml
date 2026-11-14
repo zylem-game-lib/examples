@@ -1,0 +1,58 @@
+# Captures every demo and uploads the gallery cards to R2.
+# Pull requests do not run this, so a branch cannot replace the live images.
+name: Screenshots
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: example-screenshots
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Google Chrome
+        run: pnpm exec playwright install --with-deps chrome
+
+      - name: Capture screenshots
+        run: pnpm screenshot:local
+        env:
+          SCREENSHOT_REQUIRE_WEBGPU: '1'
+          SCREENSHOT_BROWSER_CHANNEL: chrome
+
+      - name: Upload screenshots to R2
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          if [ -z "$R2_BUCKET" ]; then
+            echo "R2_BUCKET secret is not set"
+            exit 1
+          fi
+          npm install --global wrangler@4
+          for file in screenshots/*.png; do
+            name="$(basename "$file")"
+            wrangler r2 object put "${R2_BUCKET}/examples/previews/${name}" \
+              --file="$file" \
+              --content-type=image/png \
+              --cache-control="public, max-age=300" \
+              --remote \
+              --force
+          done

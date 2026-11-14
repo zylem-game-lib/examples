@@ -8,8 +8,14 @@ import { OUTPUT_DIR, archiveOrphanScreenshots, collectDemoIds } from './screensh
 const BASE_URL = process.env.SCREENSHOT_BASE_URL ?? 'http://127.0.0.1:9001';
 const SCREENSHOT_TARGET_SELECTOR = '[data-demo-screenshot-target]';
 const LOADING_OVERLAY_SELECTOR = '[data-demo-loading-overlay]';
-const SETTLE_DELAY_MS = 1000;
 const STEP_TIMEOUT_MS = 60_000;
+const BROWSER_CHANNEL = process.env.SCREENSHOT_BROWSER_CHANNEL || 'chromium';
+const REQUIRE_WEBGPU = process.env.SCREENSHOT_REQUIRE_WEBGPU === '1';
+
+const settleDelayMs = () => {
+	const configured = Number(process.env.SCREENSHOT_SETTLE_MS ?? '1000');
+	return Number.isFinite(configured) && configured >= 0 ? configured : 1000;
+};
 
 /**
  * Full Chromium (new headless) + WebGPU flags.
@@ -59,14 +65,18 @@ const probeWebGpu = async (page: Page) => {
 
 const HELP_TEXT = `
 Usage:
-  pnpm dev:examples:screenshot --name=space-invaders
-  pnpm dev:examples:screenshot --all
-  pnpm --filter @zylem/examples screenshot:local -- space-invaders
+  pnpm screenshot:local
+  pnpm screenshot:local -- --missing
+  pnpm screenshot:local -- ambient-occlusion
+
+--all captures every demo. --missing skips demos that already have a PNG.
+A bare name, or --name=<id>, captures that demo.
 `;
 
 type ScreenshotCliOptions = {
 	help: boolean;
 	all: boolean;
+	missing: boolean;
 	requestedTargets: string[];
 };
 
@@ -74,6 +84,7 @@ const parseCliOptions = (arguments_: string[]): ScreenshotCliOptions => {
 	const options: ScreenshotCliOptions = {
 		help: false,
 		all: false,
+		missing: false,
 		requestedTargets: [],
 	};
 
@@ -91,6 +102,11 @@ const parseCliOptions = (arguments_: string[]): ScreenshotCliOptions => {
 
 		if (argument === '--all') {
 			options.all = true;
+			continue;
+		}
+
+		if (argument === '--missing') {
+			options.missing = true;
 			continue;
 		}
 
@@ -123,8 +139,8 @@ const parseCliOptions = (arguments_: string[]): ScreenshotCliOptions => {
 	return options;
 };
 
-const resolveRequestedDemoIds = (allDemoIds: string[]) => {
-	const { all, requestedTargets } = parseCliOptions(process.argv.slice(2));
+const resolveRequestedDemoIds = (allDemoIds: string[], options: ScreenshotCliOptions) => {
+	const { all, requestedTargets } = options;
 
 	if (all || requestedTargets.length === 0) {
 		return allDemoIds;
@@ -211,106 +227,148 @@ async function main() {
 		console.log(`Moved orphaned screenshot to old-screens/${fileName}`);
 	}
 
-	const demoIds = resolveRequestedDemoIds(allDemoIds);
+	let demoIds = resolveRequestedDemoIds(allDemoIds, cliOptions);
 
 	if (demoIds.length === 0) {
 		throw new Error('No matching demos were found for the requested screenshot targets.');
+	}
+
+	if (cliOptions.missing) {
+		demoIds = demoIds.filter((demoId) => !fs.existsSync(path.join(OUTPUT_DIR, `${demoId}.png`)));
+	}
+
+	if (demoIds.length === 0) {
+		console.log('[screenshot] every requested demo already has a PNG');
+		return;
 	}
 
 	console.log(`[screenshot] baseUrl=${BASE_URL}`);
 	console.log(`[screenshot] demos=${demoIds.join(', ')}`);
 
 	const launchStartedAt = Date.now();
-	console.log('[screenshot] launching full chromium with WebGPU (headless)');
+	console.log(`[screenshot] launching ${BROWSER_CHANNEL} with WebGPU (headless)`);
 	const browser = await chromium.launch({
-		channel: 'chromium',
+		channel: BROWSER_CHANNEL as 'chromium' | 'chrome',
 		headless: true,
 		args: WEBGPU_LAUNCH_ARGS,
 	});
-	const page = await browser.newPage({
-		viewport: { width: 1600, height: 1000 },
-	});
-	console.log(`[screenshot] browser ready (${formatMs(launchStartedAt)})`);
+	const viewport = { width: 1600, height: 1000 };
+	const failures: { demoId: string; message: string }[] = [];
+	let saved = 0;
 
-	// Probe on a real https/http origin; about:blank often has no navigator.gpu.
-	await page.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: STEP_TIMEOUT_MS });
-	const adapterInfo = await probeWebGpu(page);
-	console.log(`[screenshot] webgpu=${JSON.stringify(adapterInfo)}`);
-	if (!adapterInfo.available) {
-		console.warn(
-			'[screenshot] WebGPU adapter unavailable; demos may fall back to WebGL2 and run slowly.'
-		);
-	}
-
-	fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-
-	const runStartedAt = Date.now();
-	let activeDemoId = 'startup';
-	attachPageLogging(page, () => activeDemoId);
-
-	for (const demoId of demoIds) {
-		activeDemoId = demoId;
-		const demoStartedAt = Date.now();
-		const routePath = getDemoRoutePath(demoId);
-		const targetUrl = new URL(routePath, `${BASE_URL}/`);
-		targetUrl.searchParams.set(SCREENSHOT_MODE_SEARCH_PARAM, '1');
-		const url = targetUrl.toString();
-
-		logStep(demoId, `capturing ${url}`);
-
-		try {
-			await runTimedStep(demoId, 'goto(domcontentloaded)', () =>
-				page.goto(url, { waitUntil: 'domcontentloaded', timeout: STEP_TIMEOUT_MS })
-			);
-			await runTimedStep(demoId, `wait visible ${SCREENSHOT_TARGET_SELECTOR}`, () =>
-				page.locator(SCREENSHOT_TARGET_SELECTOR).waitFor({
-					state: 'visible',
-					timeout: STEP_TIMEOUT_MS,
-				})
-			);
-			await runTimedStep(demoId, 'wait attached zylem-game', () =>
-				page.locator('zylem-game').waitFor({
-					state: 'attached',
-					timeout: STEP_TIMEOUT_MS,
-				})
-			);
-			await runTimedStep(demoId, `wait gone ${LOADING_OVERLAY_SELECTOR}`, () =>
-				page.waitForFunction(
-					(loadingOverlaySelector) => {
-						return !document.querySelector(loadingOverlaySelector);
-					},
-					LOADING_OVERLAY_SELECTOR,
-					{ timeout: STEP_TIMEOUT_MS }
-				)
-			);
-			await runTimedStep(demoId, `settle ${SETTLE_DELAY_MS}ms`, () =>
-				page.waitForTimeout(SETTLE_DELAY_MS)
-			);
-
-			const outputPath = path.join(OUTPUT_DIR, `${demoId}.png`);
-			await runTimedStep(demoId, `screenshot -> ${outputPath}`, () =>
-				page.locator(SCREENSHOT_TARGET_SELECTOR).screenshot({
-					path: outputPath,
-				})
-			);
-
-			logStep(demoId, `saved ${routePath} (demo total ${formatMs(demoStartedAt)})`);
-		} catch (error) {
-			try {
-				const state = await describePageState(page);
-				console.error(`[screenshot:${demoId}] page state on failure:`, state);
-			} catch (stateError) {
-				console.error(
-					`[screenshot:${demoId}] could not read page state:`,
-					stateError instanceof Error ? stateError.message : stateError
-				);
+	try {
+		// Probe on a real http origin; about:blank often has no navigator.gpu.
+		const probePage = await browser.newPage({ viewport });
+		await probePage.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: STEP_TIMEOUT_MS });
+		const adapterInfo = await probeWebGpu(probePage);
+		await probePage.close();
+		console.log(`[screenshot] browser ready (${formatMs(launchStartedAt)})`);
+		console.log(`[screenshot] webgpu=${JSON.stringify(adapterInfo)}`);
+		if (!adapterInfo.available) {
+			const message =
+				'WebGPU adapter unavailable; demos may fall back to WebGL2 and run slowly.';
+			if (REQUIRE_WEBGPU) {
+				throw new Error(`[screenshot] ${message}`);
 			}
-			throw error;
+			console.warn(`[screenshot] ${message}`);
 		}
+
+		fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+
+		const runStartedAt = Date.now();
+		const settleMs = settleDelayMs();
+
+		for (const demoId of demoIds) {
+			const page = await browser.newPage({ viewport });
+			attachPageLogging(page, () => demoId);
+			const demoStartedAt = Date.now();
+			const routePath = getDemoRoutePath(demoId);
+			const targetUrl = new URL(routePath, `${BASE_URL}/`);
+			targetUrl.searchParams.set(SCREENSHOT_MODE_SEARCH_PARAM, '1');
+			const url = targetUrl.toString();
+
+			logStep(demoId, `capturing ${url}`);
+
+			try {
+				await runTimedStep(demoId, 'goto(domcontentloaded)', () =>
+					page.goto(url, { waitUntil: 'domcontentloaded', timeout: STEP_TIMEOUT_MS })
+				);
+				await runTimedStep(demoId, `wait visible ${SCREENSHOT_TARGET_SELECTOR}`, () =>
+					page.locator(SCREENSHOT_TARGET_SELECTOR).waitFor({
+						state: 'visible',
+						timeout: STEP_TIMEOUT_MS,
+					})
+				);
+				await runTimedStep(demoId, 'wait attached zylem-game', () =>
+					page.locator('zylem-game').waitFor({
+						state: 'attached',
+						timeout: STEP_TIMEOUT_MS,
+					})
+				);
+				await runTimedStep(demoId, `wait gone ${LOADING_OVERLAY_SELECTOR}`, () =>
+					page.waitForFunction(
+						(loadingOverlaySelector) => {
+							return !document.querySelector(loadingOverlaySelector);
+						},
+						LOADING_OVERLAY_SELECTOR,
+						{ timeout: STEP_TIMEOUT_MS }
+					)
+				);
+				await runTimedStep(demoId, 'wait for sized canvas', () =>
+					page.waitForFunction(
+						() => {
+							const game = document.querySelector('zylem-game');
+							const canvas =
+								game instanceof HTMLElement
+									? game.shadowRoot?.querySelector('canvas')
+									: null;
+							return canvas instanceof HTMLCanvasElement && canvas.width > 0 && canvas.height > 0;
+						},
+						{ timeout: STEP_TIMEOUT_MS }
+					)
+				);
+				await runTimedStep(demoId, `settle ${settleMs}ms`, () => page.waitForTimeout(settleMs));
+
+				const outputPath = path.join(OUTPUT_DIR, `${demoId}.png`);
+				await runTimedStep(demoId, `screenshot -> ${outputPath}`, () =>
+					page.locator(SCREENSHOT_TARGET_SELECTOR).screenshot({
+						path: outputPath,
+					})
+				);
+
+				saved += 1;
+				logStep(demoId, `saved ${routePath} (demo total ${formatMs(demoStartedAt)})`);
+			} catch (error) {
+				const message = error instanceof Error ? error.message : String(error);
+				failures.push({ demoId, message });
+				console.error(`[screenshot:${demoId}] ${message}`);
+				try {
+					const state = await describePageState(page);
+					console.error(`[screenshot:${demoId}] page state on failure:`, state);
+				} catch (stateError) {
+					console.error(
+						`[screenshot:${demoId}] could not read page state:`,
+						stateError instanceof Error ? stateError.message : stateError
+					);
+				}
+			} finally {
+				await page.close();
+			}
+		}
+
+		console.log(
+			`[screenshot] saved ${saved}, failed ${failures.length} (${formatMs(runStartedAt)})`
+		);
+	} finally {
+		await browser.close();
 	}
 
-	await browser.close();
-	console.log(`[screenshot] done (${formatMs(runStartedAt)})`);
+	if (failures.length > 0) {
+		for (const failure of failures) {
+			console.error(`[screenshot] failed ${failure.demoId}: ${failure.message}`);
+		}
+		process.exitCode = 1;
+	}
 }
 
 main().catch((err) => {
