@@ -57,6 +57,7 @@ const PREDEFINED_ORDER = {
 		'virtual-touch-ball',
 	],
 	Advanced: [
+		'ambient-occlusion',
 		'fps',
 		'vessel-test',
 		'jumbotron-test',
