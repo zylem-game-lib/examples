@@ -65,7 +65,8 @@
     "typescript": "6.0.3",
     "vite": "7.0.4",
     "vite-plugin-glsl": "^1.5.4",
-    "vite-plugin-solid": "^2.11.8"
+    "vite-plugin-solid": "^2.11.8",
+    "wrangler": "4.162.0"
   },
   "pnpm": {
     "overrides": {
