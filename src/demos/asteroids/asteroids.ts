@@ -1,9 +1,8 @@
 import { Color, Vector2, Vector3 } from 'three';
 import { createCamera, createGame, createStage, Perspectives } from '@zylem/game-lib/core';
-import { createSprite, createText, destroy, TEXT_TYPE } from '@zylem/game-lib/entity';
+import { createSprite, createText, destroy, TEXT_TYPE, type ZylemSprite } from '@zylem/game-lib/entity';
 import { mergeInputConfigs, useArrowsForAxes, useWASDForAxes } from '@zylem/game-lib/input';
-import { ScreenWrapBehavior, Shooter2DBehavior, ThrusterBehavior, useBehavior } from '@zylem/game-lib/behavior';
-import { type Shooter2DSourceEntity } from '@zylem/game-lib/behavior';
+import { ScreenWrapBehavior, Shooter2DBehavior, ThrusterBehavior, type ThrusterEntity } from '@zylem/game-lib/behavior';
 import { setGlobal } from '@zylem/game-lib/globals';
 import { demoAsset } from '../../assets/manifest';
 
@@ -116,14 +115,14 @@ export default function createDemo() {
     return asteroid;
   }
 
-  const baseShip = createSprite({
+  const playerShip: ZylemSprite & Partial<ThrusterEntity> = createSprite({
     name: 'player-ship',
     images: [{ name: 'player-ship', file: playerShipImg }],
     size: { x: 1, y: 1, z: 1 },
     position: { x: 0, y: 0, z: 0 },
   });
 
-  const playerShip = useBehavior(baseShip, ThrusterBehavior, {
+  playerShip.use(ThrusterBehavior, {
     linearThrust: 3.2,
     angularThrust: 3,
     linearDamping: 0.3,
@@ -197,7 +196,7 @@ export default function createDemo() {
     const facingAngle = getRotationAngle2D(sourceRotation);
     const forward = getForwardDirection(facingAngle);
     void playerShooter.fire({
-      source: me as Shooter2DSourceEntity,
+      source: me,
       stage,
       target: {
         x: sourcePosition.x + forward.x,

@@ -32,7 +32,7 @@ export default function createDemo() {
 	});
 
 	const ballCoordinator = new BoundaryRicochetCoordinator(
-		ball as any,
+		ball,
 		ballBoundary,
 		ballRicochet,
 	);

@@ -1,10 +1,11 @@
-import { Euler, Vector3 } from 'three';
-import { createGame, createStage, createCamera, gameConfig, Perspectives, FirstPersonPerspective } from '@zylem/game-lib/core';
-import { createActor } from '@zylem/game-lib/entity';
+import { Euler } from 'three';
+import { createGame, createStage, createCamera, gameConfig, Perspectives, type FirstPersonPerspective } from '@zylem/game-lib/core';
+import { createActor, type ZylemActor } from '@zylem/game-lib/entity';
 import { useWASDForAxes, useScreenCenterLook, screenCenterLookDeltas } from '@zylem/game-lib/input';
-import { FirstPersonShooterCoordinator, FirstPersonBehavior, Jumper3DBehavior } from '@zylem/game-lib/behavior';
+import { FirstPersonShooterCoordinator, FirstPersonBehavior, Jumper3DBehavior, type FirstPersonShooterEntity } from '@zylem/game-lib/behavior';
 
 import { createFloor, createArenaLevel } from './level';
+import { addCameraTarget } from '../../utils';
 
 import { demoAsset } from '../../assets/manifest';
 
@@ -36,7 +37,7 @@ export default function createDemo() {
 
 	// --- Player (invisible physics capsule) ---
 
-	const player = createActor({
+	const player: ZylemActor & FirstPersonShooterEntity = createActor({
 		name: 'player',
 		collision: {
 			static: false,
@@ -71,7 +72,7 @@ export default function createDemo() {
 		},
 	});
 
-	const jumper = player.use(Jumper3DBehavior, {
+	player.use(Jumper3DBehavior, {
 		jumpHeight: 2.5,
 		gravity: 20,
 		maxJumps: 2,
@@ -82,11 +83,7 @@ export default function createDemo() {
 		fall: { fallGravityMultiplier: 1.5 },
 	});
 
-	const fpsShooter = new FirstPersonShooterCoordinator(
-		player as any,
-		fpsController,
-		jumper,
-	);
+	const fpsShooter = new FirstPersonShooterCoordinator(player, fpsController);
 
 	// --- Stage + input ---
 
@@ -129,7 +126,7 @@ export default function createDemo() {
 		},
 	});
 
-	fpsCamera.addTarget(player);
+	addCameraTarget(fpsCamera, player);
 
 	const game = createGame(
 		myGameConfig,

@@ -37,7 +37,7 @@ test.describe('mobile examples shell', () => {
 		await expect(search).toBeVisible();
 		await search.fill('empty');
 
-		const emptyGameTile = page.locator('[data-mobile-demo-card="20-empty-game"]');
+		const emptyGameTile = page.locator('[data-mobile-demo-card="empty-game"]');
 		await expect(emptyGameTile).toBeVisible();
 		await emptyGameTile.click();
 
@@ -46,20 +46,20 @@ test.describe('mobile examples shell', () => {
 
 		await demoButton.click();
 		await expect(drawer).toHaveAttribute('data-state', 'open');
-		await page.locator('[data-mobile-demo-card="20-empty-game"]').click();
+		await emptyGameTile.click();
 		await expect(drawer).toHaveAttribute('data-state', 'closed');
 	});
 
 	test('opens the editor from the bottom bar', async ({ page }) => {
 		const editor = page.locator('zylem-editor');
 
-		await page.locator('[data-mobile-editor-button]').click();
-		await expect(editor.getByText('Game')).toBeVisible();
+		const toggleButton = page.getByRole('button', { name: 'Toggle Zylem editor' });
+		const toolbar = editor.getByRole('toolbar');
+		await toggleButton.click();
+		await expect(toolbar).toBeVisible();
 
-		const closeButtons = editor.locator('[data-testid="floating-panel-close"]');
-		await closeButtons.first().click();
-		await closeButtons.first().click();
-		await expect(editor.getByText('Game')).toHaveCount(0);
+		await toggleButton.click();
+		await expect(toolbar).toBeHidden();
 	});
 
 	test('loads direct demo routes with the drawer closed', async ({ page }) => {
@@ -69,6 +69,6 @@ test.describe('mobile examples shell', () => {
 			'data-state',
 			'closed',
 		);
-		await expect(page.locator('zylem-game[data-demo-id="20-empty-game"]')).toBeVisible();
+		await expect(page.locator('zylem-game[data-demo-id="empty-game"]')).toBeVisible();
 	});
 });

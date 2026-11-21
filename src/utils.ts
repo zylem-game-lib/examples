@@ -1,4 +1,5 @@
-import type { ZylemBox } from '@zylem/game-lib/entity';
+import type { CameraWrapper, StageEntity } from '@zylem/game-lib/core';
+import type { ZylemBox, ZylemActor } from '@zylem/game-lib/entity';
 import { createActor, createBox, createPlane } from '@zylem/game-lib/entity';
 import { Color } from "three";
 
@@ -84,7 +85,7 @@ const actorTypeToCollision: Record<PlaygroundActorType, any> = {
 	mascot: { size: { x: 2, y: 3, z: 0 }, position: { x: 0, y: 1.2, z: 0 }, static: false }
 };
 
-export const playgroundActor: any = (
+export const playgroundActor = (
 	type: PlaygroundActorType,
 	color?: Color,
 	position: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 },
@@ -106,6 +107,12 @@ export const playgroundActor: any = (
 export const playgroundActorFactory = (type: PlaygroundActorType) => {
 	return () => playgroundActor(type);
 };
+
+// Camera targets are declared as StageEntity in 0.11.0. The camera reads the
+// spawned entity's group to follow its position and rotation.
+export function addCameraTarget(camera: CameraWrapper, entity: Pick<ZylemActor, 'uuid' | 'group'>) {
+	camera.addTarget(entity as StageEntity);
+}
 
 /**
  * Platform shape definitions for the platformer course

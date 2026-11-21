@@ -38,7 +38,7 @@ const DEV_BASE_URL = '/cdn/demos';
  *
  * Precedence:
  *   1. `VITE_DEMOS_ASSET_BASE_URL` env var (build-time substitution).
- *   2. The Vite-proxied `/cdn` prefix during `vite dev` / `vite preview`.
+ *   2. The Vite-proxied `/cdn` prefix during development and local previews.
  *   3. The production CDN origin for production builds.
  */
 function resolveBaseUrl(): string {
@@ -47,7 +47,9 @@ function resolveBaseUrl(): string {
 	if (override && override.length > 0) {
 		return override.replace(/\/+$/, '');
 	}
-	return env?.DEV ? DEV_BASE_URL : PRODUCTION_BASE_URL;
+	const onLoopback = typeof location !== 'undefined'
+		&& ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+	return env?.DEV || onLoopback ? DEV_BASE_URL : PRODUCTION_BASE_URL;
 }
 
 const DEMOS_ASSET_BASE_URL = resolveBaseUrl();

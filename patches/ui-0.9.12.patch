@@ -1,0 +1,18 @@
+diff --git a/src/components/Slider/Slider.tsx b/src/components/Slider/Slider.tsx
+--- a/src/components/Slider/Slider.tsx
++++ b/src/components/Slider/Slider.tsx
+@@ -29,8 +29,12 @@ export function Slider(props: SliderProps) {
+     <KSlider.Root
+       class={props.class ? `zylem-slider-root ${props.class}` : 'zylem-slider-root'}
+       value={props.value !== undefined ? [props.value] : undefined}
+-      onChange={(values) => props.onChange?.(values[0])}
+-      onChangeEnd={(values) => props.onCommit?.(values[0])}
++      onChange={([value]) => {
++        if (value !== undefined) props.onChange?.(value);
++      }}
++      onChangeEnd={([value]) => {
++        if (value !== undefined) props.onCommit?.(value);
++      }}
+       minValue={props.minValue}
+       maxValue={props.maxValue}
+       step={props.step}

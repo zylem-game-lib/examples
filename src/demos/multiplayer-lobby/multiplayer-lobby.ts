@@ -1,17 +1,14 @@
 /// <reference types="@zylem/assets" />
 
 import { Color, Vector2, Vector3 } from 'three';
-import { type UpdateContext, createCamera, createGame, createStage } from '@zylem/game-lib/core';
+import { createCamera, createGame, createStage } from '@zylem/game-lib/core';
 import { createPlane, createText } from '@zylem/game-lib/entity';
 import { getGlobal, setGlobal } from '@zylem/game-lib/globals';
 import { mergeInputConfigs, useArrowsForAxes, useWASDForAxes } from '@zylem/game-lib/input';
-import { Platformer3DBehavior, Platformer3DState } from '@zylem/game-lib/behavior';
+import { Platformer3DBehavior, Platformer3DState, type Platformer3DEntity } from '@zylem/game-lib/behavior';
 import type { ErrorContext } from './spacetimedb-generated';
 import type { EntityTransform, Player } from './spacetimedb-generated/types';
-import { playgroundActor } from '../../utils';
-import { TransformableEntity } from '~/lib/actions/capabilities/apply-transform';
-import { GameEntity } from '~/lib/entities';
-import { StageEntity } from '@zylem/game-lib/core';
+import { addCameraTarget, playgroundActor } from '../../utils';
 import {
 	multiplayerLobbyStore,
 	getOrCreateMultiplayerLobbyDeviceId,
@@ -23,12 +20,7 @@ import {
 	preflightMultiplayerLobbySpacetimeUri,
 } from './multiplayer-lobby-stdb-client';
 
-type PlayerEntity = TransformableEntity &
-	GameEntity<any> &
-	StageEntity & {
-		/** Provided by ZylemActor (playgroundActor returns `any`, so declared here). */
-		playAnimation: (options: NetworkAnimationState) => void;
-	};
+type PlayerEntity = ReturnType<typeof playgroundActor> & Partial<Platformer3DEntity>;
 type StageHandle = ReturnType<typeof createStage>;
 
 type AvatarRecord = {
@@ -83,14 +75,7 @@ function animationForFsmState(state: Platformer3DState): NetworkAnimationState {
 
 function applyNetworkTransform(entity: PlayerEntity, t: EntityTransform) {
 	const q = { x: t.rotX, y: t.rotY, z: t.rotZ, w: t.rotW };
-	const b = entity.body as
-		| {
-			setTranslation: (v: { x: number; y: number; z: number }, wake: boolean) => void;
-			setRotation: (v: { x: number; y: number; z: number; w: number }, wake: boolean) => void;
-			setLinvel: (v: { x: number; y: number; z: number }, wake: boolean) => void;
-			setAngvel: (v: { x: number; y: number; z: number }, wake: boolean) => void;
-		}
-		| undefined;
+	const b = entity.body;
 	if (b) {
 		b.setTranslation({ x: t.posX, y: t.posY, z: t.posZ }, true);
 		b.setRotation(q, true);
@@ -212,7 +197,8 @@ export default function createDemo() {
 		// The platformer controller (KCC + jump FSM) runs inside the wasm
 		// runtime; attach it to the actor's simulation body before spawn.
 		localPlatformer = attachPlatformerBehavior(actor);
-		mainCamera.cameraRef.target = actor;
+		mainCamera.clearTargets();
+		addCameraTarget(mainCamera, actor);
 		localActor = actor;
 	}
 
@@ -223,14 +209,14 @@ export default function createDemo() {
 	 * over the network.
 	 */
 	function installLocalUpdate(actor: PlayerEntity) {
-		actor.onUpdate(({ inputs, me }: UpdateContext<any>) => {
+		actor.onUpdate(({ inputs, me }) => {
 			const { p1 } = inputs;
 			const horizontal = p1.axes.Horizontal.value;
 			const vertical = p1.axes.Vertical.value;
 			const jumpHeld = p1.buttons.A.held > 0;
 			const runHeld = p1.shoulders.LTrigger.held > 0;
 
-			const platformerInput = (me as any).$platformer;
+			const platformerInput = me.$platformer;
 			if (platformerInput) {
 				platformerInput.moveX = horizontal;
 				platformerInput.moveZ = vertical;
@@ -243,7 +229,7 @@ export default function createDemo() {
 			}
 			if (lastMovement.lengthSq() > 0) {
 				const yaw = Math.atan2(-lastMovement.x, lastMovement.z);
-				(me as any).setRotationY(yaw);
+				me.setRotationY(yaw);
 			}
 
 			const state = localPlatformer?.getState() ?? Platformer3DState.Idle;
@@ -293,7 +279,7 @@ export default function createDemo() {
 			: { x: 0, y: 0, z: 0 };
 
 		const color = u32ToColor(player.colorU32);
-		const actor = playgroundActor('player', color, pos) as PlayerEntity;
+		const actor: PlayerEntity = playgroundActor('player', color, pos);
 		const nameplate = createText({
 			text: player.displayName,
 			stickToViewport: false,
@@ -304,7 +290,7 @@ export default function createDemo() {
 		const isLocal = player.deviceId.trim() === net.localDeviceId;
 		const rec: AvatarRecord = { actor, nameplate, deviceId: player.deviceId, isLocal };
 		avatars.set(eid, rec);
-		actor.listen('entity:animation:loaded', () => {
+		actor.onLoaded(() => {
 			if (isLocal) return;
 			const latest = pendingTransforms.get(eid);
 			if (!latest) return;
@@ -393,7 +379,7 @@ export default function createDemo() {
 		const colorU32 = getGlobal<number>('multiplayerLobbyColorU32') ?? 0xff4a90e2;
 		const color = u32ToColor(colorU32);
 
-		const actor = playgroundActor('player', color, { x: 0, y: 0, z: 0 }) as PlayerEntity;
+		const actor: PlayerEntity = playgroundActor('player', color, { x: 0, y: 0, z: 0 });
 		const nameplate = createText({
 			text: displayName,
 			stickToViewport: false,
@@ -580,7 +566,7 @@ export default function createDemo() {
 	);
 
 	let lobbyAdvanced = false;
-	game.onUpdate((ctx: UpdateContext<any>) => {
+	game.onUpdate((ctx) => {
 		if (lobbyAdvanced) return;
 		if (!multiplayerLobbyStore.joinRequested) return;
 		const name = multiplayerLobbyStore.displayName.trim();

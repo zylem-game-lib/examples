@@ -2,7 +2,7 @@
 import { Color, Vector3 } from 'three';
 import { createGame, createStage, createCamera, Perspectives, setCameraFeed } from '@zylem/game-lib/core';
 import { createBox } from '@zylem/game-lib/entity';
-import { playgroundPlane, playgroundActor } from '../../utils';
+import { addCameraTarget, playgroundPlane, playgroundActor } from '../../utils';
 
 export default function createDemo() {
   // ─── Scene entities ──────────────────────────────────────────────────────
@@ -86,8 +86,8 @@ export default function createDemo() {
   });
 
   // Let the jumbotron camera follow the actor
-  actor.onSetup(({ me }: any) => {
-    jumbotronCamera.addTarget(me);
+  actor.onSetup(({ me }) => {
+    addCameraTarget(jumbotronCamera, me);
   });
 
   // ─── Stage ───────────────────────────────────────────────────────────────

@@ -41,6 +41,7 @@ const App: Component<RouteSectionProps> = (props) => {
         <zylem-editor
           class={editorOverlay}
           launcher-mode={editorLauncherMode()}
+          attr:default-docks={JSON.stringify({ top: ['toolbar'], right: ['main'] })}
         ></zylem-editor>
       </Show>
     </>

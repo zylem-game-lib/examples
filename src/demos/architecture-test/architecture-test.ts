@@ -1,6 +1,5 @@
-import { createGame, gameConfig } from '@zylem/game-lib/core';
-import { StageBlueprint } from '@zylem/game-lib/core';
-import { StageManager } from '@zylem/game-lib/core';
+import { createGame, StageManager, type StageBlueprint } from '@zylem/game-lib/core';
+import { demoAsset } from '../../assets/manifest';
 
 // Define a stage blueprint
 const myStageBlueprint: StageBlueprint = {
@@ -23,25 +22,18 @@ const myStageBlueprint: StageBlueprint = {
       position: [0.5, 0.5],
       data: {
         size: { x: 1, y: 1, z: 1 },
-        material: { color: '#FF0000' },
+        images: [{ name: 'ship', file: demoAsset('general/zylem-ship.png') }],
       },
     },
   ],
 };
 
-// This will have to move into the the game Class
-// Register the stage
-StageManager.registerStaticStage(myStageBlueprint.id, myStageBlueprint);
+export default function createDemo() {
+  StageManager.registerStaticStage(myStageBlueprint.id, myStageBlueprint);
 
-const myGameConfig = gameConfig({
-  id: 'arch-test',
-  debug: true,
-});
-
-const game = createGame(myGameConfig);
-game.start();
-
-setTimeout(() => {
-  // Load the stage using the new ID-based method
-  game.loadStageFromId('arch-test-stage');
-}, 1000);
+  const game = createGame({ id: 'arch-test', debug: true });
+  game.onSetup(() => {
+    void game.loadStageFromId(myStageBlueprint.id);
+  });
+  return game;
+}

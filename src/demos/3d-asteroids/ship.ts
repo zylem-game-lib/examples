@@ -5,6 +5,7 @@ import { demoAsset } from '../../assets/manifest';
 
 const fisherShipGlb = demoAsset('general/player-ship.glb');
 import { destructiblePrebakeWorkerUrl } from '../_shared/destructible-prebake-worker-url';
+import { prebakeActorFragments } from '../_shared/prebake-actor-fragments';
 import { createEnergyShield } from '@zylem/shaders';
 import {
 	BULLET_BOUNDS_X,
@@ -13,7 +14,6 @@ import {
 	SHIP_MODEL_YAW_OFFSET,
 	WRAP_HEIGHT,
 	WRAP_WIDTH,
-	getFirstMesh,
 	getModelRoot,
 } from './shared';
 
@@ -83,7 +83,6 @@ export function createShip(): ShipRuntime {
 			angularVelocity: 1.8,
 		},
 	});
-	let warmedUp = false;
 	let exploded = false;
 
 	ship.use(ScreenWrapBehavior, {
@@ -95,43 +94,15 @@ export function createShip(): ShipRuntime {
 		me.body?.setGravityScale(0, true);
 		me.body?.setLinearDamping(0);
 		me.setRotation(0, 0, 0);
-		bindPrimaryMesh();
 	});
 	shield.onSetup(() => {
 		setEntityVisibility(shield, false);
 	});
 
-	ship.listen('entity:model:loaded', () => {
-		orientShipModel(ship);
-		bindPrimaryMesh();
+	ship.onLoaded(({ me }) => {
+		orientShipModel(me);
+		prebakeActorFragments(me, destructible);
 	});
-
-	function warmupDestructible() {
-		if (warmedUp || !ship.mesh) {
-			return;
-		}
-
-		// Worker prebake keeps Voronoi off the main thread; game-lib dedupes concurrent
-		// prebakeAsync calls on this same behavior handle.
-		void destructible.prebakeAsync().then(
-			() => {
-				warmedUp = true;
-			},
-			(error) => {
-				console.warn('Failed to warm destructible ship', error);
-			},
-		);
-	}
-
-	function bindPrimaryMesh() {
-		const primaryMesh = getFirstMesh(ship.group);
-		if (!primaryMesh) {
-			return;
-		}
-
-		ship.mesh = primaryMesh;
-		warmupDestructible();
-	}
 
 	return {
 		entity: ship,

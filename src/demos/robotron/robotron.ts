@@ -2,7 +2,7 @@ import { Color, Vector2, Vector3 } from 'three';
 import { createCamera, createGame, createStage, Perspectives } from '@zylem/game-lib/core';
 import { createSprite, createText, destroy, TEXT_TYPE } from '@zylem/game-lib/entity';
 import { mergeInputConfigs, useArrowsForSecondaryAxes, useWASDForAxes } from '@zylem/game-lib/input';
-import { ScreenWrapBehavior, Shooter2DBehavior, TopDownMovementBehavior, TopDownShooterCoordinator, useBehavior } from '@zylem/game-lib/behavior';
+import { ScreenWrapBehavior, Shooter2DBehavior, TopDownMovementBehavior, TopDownShooterCoordinator } from '@zylem/game-lib/behavior';
 import { setGlobal } from '@zylem/game-lib/globals';
 import { demoAsset } from '../../assets/manifest';
 
@@ -92,14 +92,14 @@ export default function createDemo() {
     return enemy;
   }
 
-  const basePlayer = createSprite({
+  const player = createSprite({
     name: 'robotron-player',
     images: [{ name: 'robotron-player', file: playerShipImg }],
     size: { x: 1, y: 1, z: 1 },
     position: { x: 0, y: 0, z: 0 },
   });
 
-  const player = useBehavior(basePlayer, TopDownMovementBehavior, {
+  player.use(TopDownMovementBehavior, {
     moveSpeed: PLAYER_SPEED,
   });
 

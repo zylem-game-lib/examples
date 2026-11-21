@@ -1,5 +1,5 @@
 import { createGame, createStage } from '@zylem/game-lib/core';
-import { createSprite } from '@zylem/game-lib/entity';
+import { createSprite, type ZylemSprite } from '@zylem/game-lib/entity';
 import { ThrusterBehavior, ScreenWrapBehavior, type ThrusterEntity } from '@zylem/game-lib/behavior';
 import { useArrowsForAxes } from '@zylem/game-lib/input';
 import { demoAsset } from '../../assets/manifest';
@@ -8,14 +8,14 @@ const playerShipImg = demoAsset('general/zylem-ship.png');
 
 export default function createDemo() {
 	function playerFactory() {
-		const baseShip = createSprite({
+		const playerShip: ZylemSprite & Partial<ThrusterEntity> = createSprite({
 			images: [{ name: 'player-ship', file: playerShipImg }],
 		});
 
-		const playerShip = baseShip as typeof baseShip & ThrusterEntity;
-		playerShip.use(ThrusterBehavior, {
+		const thruster = playerShip.use(ThrusterBehavior, {
 			linearThrust: 5,
 			angularThrust: 8,
+			linearDamping: 0,
 		});
 
 		playerShip.use(ScreenWrapBehavior, {
@@ -30,14 +30,13 @@ export default function createDemo() {
 			if (!me.$thruster) return;
 
 			const forward = Math.max(-Vertical.value, 0);
-			const braking = Math.max(Vertical.value, 0);
+			const linearDamping = Math.max(Vertical.value, 0) * BRAKE_STRENGTH;
+			if (thruster.getOptions().linearDamping !== linearDamping) {
+				thruster.setOptions({ linearDamping });
+			}
 
 			me.$thruster.thrust = forward;
 			me.$thruster.rotate = Horizontal.value;
-
-			if (me.thruster) {
-				me.thruster.linearDamping = braking * BRAKE_STRENGTH;
-			}
 		});
 
 		return playerShip;

@@ -8,6 +8,7 @@ import {
 	Perspectives,
 } from '@zylem/game-lib/core';
 import { bricks } from '@zylem/shaders';
+import { addCameraTarget } from '../../utils';
 import { Platformer2DBehavior, Platformer2DState } from '@zylem/game-lib/behavior';
 import {
 	mergeInputConfigs,
@@ -259,8 +260,8 @@ export default function createDemo() {
 		},
 	});
 
-	player.onSetup(({ me }: any) => {
-		camera.addTarget(me);
+	player.onSetup(({ me }) => {
+		addCameraTarget(camera, me);
 	});
 
 	const stage = createStage(

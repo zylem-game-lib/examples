@@ -7,6 +7,7 @@ import { demoAsset } from '../../assets/manifest';
 
 const redAsteroidGlb = demoAsset('general/asteroid.glb');
 import { destructiblePrebakeWorkerUrl } from '../_shared/destructible-prebake-worker-url';
+import { prebakeActorFragments } from '../_shared/prebake-actor-fragments';
 import {
 	ASTEROID_TARGET_SMALL_SHARE,
 	type AsteroidSize,
@@ -26,7 +27,6 @@ import {
 	WRAP_HEIGHT,
 	WRAP_WIDTH,
 	getAsteroidSpeed,
-	getFirstMesh,
 	getRespawnDelayForElapsed,
 	randomDirection,
 	randomRespawnDelay,
@@ -55,7 +55,6 @@ export type AsteroidRuntime = {
 	active: boolean;
 	cleanupScheduled: boolean;
 	inPool: boolean;
-	warmedUp: boolean;
 };
 
 type AsteroidFieldOptions = {
@@ -272,23 +271,6 @@ export function createAsteroidField({
 		return Math.random() < ASTEROID_TARGET_SMALL_SHARE ? 'small' : 'large';
 	}
 
-	function warmupDestructible(runtime: AsteroidRuntime) {
-		if (runtime.warmedUp || !runtime.entity.mesh) {
-			return;
-		}
-
-		// Worker prebake keeps Voronoi off the main thread; game-lib dedupes concurrent
-		// prebakeAsync calls on the same asteroid behavior handle.
-		void runtime.destructible.prebakeAsync().then(
-			() => {
-				runtime.warmedUp = true;
-			},
-			(error) => {
-				console.warn('Failed to warm destructible asteroid', error);
-			},
-		);
-	}
-
 	function isAsteroidReady(runtime: AsteroidRuntime) {
 		return Boolean(runtime.entity.mesh?.geometry);
 	}
@@ -462,24 +444,14 @@ export function createAsteroidField({
 			active: false,
 			cleanupScheduled: false,
 			inPool: false,
-			warmedUp: false,
 		};
 
 		asteroidRuntimeById.set(asteroid.uuid, runtime);
 		returnAsteroidToPool(runtime);
 
-		const bindPrimaryMesh = () => {
-			const primaryMesh = getFirstMesh(asteroid.group);
-			if (primaryMesh) {
-				asteroid.mesh = primaryMesh;
-				warmupDestructible(runtime);
-			}
-		};
-
 		asteroid.onSetup(({ me }) => {
 			me.body?.setGravityScale(0, true);
 			me.body?.setLinearDamping(0);
-			bindPrimaryMesh();
 			if (runtime.active) {
 				me.setPosition(runtime.spawnPosition.x, runtime.spawnPosition.y, 0);
 				me.body?.setTranslation({
@@ -499,8 +471,8 @@ export function createAsteroidField({
 			}
 		});
 
-		asteroid.listen('entity:model:loaded', () => {
-			bindPrimaryMesh();
+		asteroid.onLoaded(({ me }) => {
+			prebakeActorFragments(me, destructible);
 		});
 
 		asteroid.onUpdate(({ me, delta }) => {
@@ -515,7 +487,7 @@ export function createAsteroidField({
 			me.setPositionZ(0);
 		});
 
-		asteroid.onCleanup(() => {
+		asteroid.onUnload(() => {
 			asteroidRuntimeById.delete(asteroid.uuid);
 		});
 

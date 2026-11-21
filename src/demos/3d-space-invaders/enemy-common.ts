@@ -1,6 +1,7 @@
 import { createActor } from '@zylem/game-lib/entity';
 import { Destructible3DBehavior, FractureOptions, type Destructible3DHandle } from '@zylem/game-lib/behavior';
 import { destructiblePrebakeWorkerUrl } from '../_shared/destructible-prebake-worker-url';
+import { prebakeActorFragments } from '../_shared/prebake-actor-fragments';
 import { Matrix4, Vector3 } from 'three';
 import {
 	type EnemyKind,
@@ -11,7 +12,6 @@ import {
 	PLAYER_BULLET_COLLISION_TYPE,
 	PLAYER_COLLISION_TYPE,
 	faceEntity,
-	getFirstMesh,
 	orientEntityModel,
 	setWorldPosition,
 } from './shared';
@@ -139,37 +139,7 @@ export function createEnemyRuntime({
 			angularVelocity: 1.45,
 		},
 	});
-	let warmedUp = false;
 	let exploded = false;
-
-	const orient = () => {
-		orientEntityModel(enemy, modelTiltX, modelYawOffset);
-	};
-
-	const warmupDestructible = () => {
-		if (warmedUp || !enemy.mesh) {
-			return;
-		}
-
-		void destructible.prebakeAsync().then(
-			() => {
-				warmedUp = true;
-			},
-			(error) => {
-				console.warn(`Failed to warm destructible enemy ship: ${name}`, error);
-			},
-		);
-	};
-
-	const bindPrimaryMesh = () => {
-		const primaryMesh = getFirstMesh(enemy.group);
-		if (!primaryMesh) {
-			return;
-		}
-
-		enemy.mesh = primaryMesh;
-		warmupDestructible();
-	};
 
 	const buildImpactOverride = (impactWorld?: Vector3) => {
 		if (!impactWorld) {
@@ -197,18 +167,16 @@ export function createEnemyRuntime({
 		};
 	};
 
-	enemy.onSetup(({ me }: any) => {
+	enemy.onSetup(({ me }) => {
 		me.body?.setGravityScale(0, true);
 		me.body?.setLinearDamping(0);
 		setWorldPosition(me, anchor);
 		faceEntity(me, DOWN_VECTOR);
-		orient();
-		bindPrimaryMesh();
 	});
 
-	enemy.listen('entity:model:loaded', () => {
-		orient();
-		bindPrimaryMesh();
+	enemy.onLoaded(({ me }) => {
+		orientEntityModel(me, modelTiltX, modelYawOffset);
+		prebakeActorFragments(me, destructible);
 	});
 
 	return {

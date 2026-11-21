@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import glsl from 'vite-plugin-glsl';
 import solidPlugin from 'vite-plugin-solid';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import { readdirSync, readFileSync } from 'node:fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 // Relative path so Vite's config bundler inlines the plugin. A package
@@ -12,6 +13,26 @@ import { Agent } from 'https';
 import { Resolver } from 'dns';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// game-lib's worker and Three's loaders resolve files relative to their own
+// modules. Prebundle the engine's other imports, including its CommonJS deps.
+function gameLibImports(): string[] {
+	const dist = path.join(__dirname, 'node_modules/@zylem/game-lib/dist');
+	const specifiers = new Set<string>();
+	const bareImport = /(?:\bfrom\s*|\bimport\s*\(?\s*)["']([^"'./][^"']*)["']/g;
+	for (const name of readdirSync(dist)) {
+		if (!name.endsWith('.js') || name === 'navigation-worker.js') continue;
+		const source = readFileSync(path.join(dist, name), 'utf8');
+		for (const match of source.matchAll(bareImport)) {
+			const specifier = match[1];
+			if (specifier && !/^(?:@zylem\/|three(?:\/|$))/.test(specifier)) {
+				specifiers.add(specifier);
+			}
+		}
+	}
+	return [...specifiers].sort().map(specifier => `@zylem/game-lib > ${specifier}`);
+}
+
 const defaultAllowedHosts = ['zylem.onrender.com', 'zylem-staging.onrender.com'];
 const additionalAllowedHosts = (process.env.__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS ?? '')
 	.split(',')
@@ -103,7 +124,7 @@ export default defineConfig({
 		// game-lib and editor share one bridge module (the registry is
 		// realm-safe regardless, but one copy keeps types/state trivially
 		// consistent).
-		dedupe: ['three', 'solid-js', '@zylem/bridge'],
+		dedupe: ['three', 'solid-js', '@zylem/bridge', '@zylem/game-lib'],
 		alias: [
 			// Solid-only: route valtio's React-coupled root entry to vanilla.
 			{ find: /^valtio$/, replacement: 'valtio/vanilla' },
@@ -118,6 +139,7 @@ export default defineConfig({
 	},
 	assetsInclude: ['**/*.fbx', '**/*.gltf', '**/*.glb', '**/*.wasm'],
 	optimizeDeps: {
+		include: gameLibImports(),
 		// Solid JSX packages must stay out of esbuild prebundling. esbuild
 		// applies the React JSX transform by default, which turns lucide-solid
 		// / @kobalte icons into `React.createElement(...)` and crashes the
@@ -127,11 +149,14 @@ export default defineConfig({
 		// @zylem/behaviors and @zylem/runtime are excluded so the runtime's
 		// `new URL('./zylem_runtime.wasm', import.meta.url)` keeps resolving
 		// next to the real module instead of vite's prebundle cache, and so
-		// behaviors' nested @zylem/runtime file: dep resolves correctly.
+		// game-lib's navigation worker and Three's TSL state stay with the
+		// modules that use them.
 		exclude: [
 			'@zylem/ui',
 			'@zylem/editor',
 			'lucide-solid',
+			'three',
+			'@zylem/game-lib',
 			'@zylem/behaviors',
 			'@zylem/runtime',
 		],
@@ -153,9 +178,7 @@ export default defineConfig({
 		// Same-origin proxy for the demos CDN. Lets dev builds load
 		// `assets.zylem.cloud` without tripping CORS while we wait for the
 		// bucket-side rules to propagate (or for new origins to be added).
-		// `demoAsset(...)` composes URLs against `/cdn` automatically when
-		// `import.meta.env.DEV` is true; production builds bypass this proxy
-		// and hit the CDN origin directly.
+		// Local previews inherit this proxy. The deployed gallery uses the CDN directly.
 		proxy: {
 			'/cdn': {
 				target: 'https://assets.zylem.cloud',

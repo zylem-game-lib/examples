@@ -144,7 +144,7 @@ export default function createDemo() {
 		position: { x: 0, y: 9, z: 0 },
 	});
 
-	player.onSetup(({ me }) => {
+	player.onLoaded(({ me }) => {
 		me.playAnimation({
 			key: 'samba',
 		});

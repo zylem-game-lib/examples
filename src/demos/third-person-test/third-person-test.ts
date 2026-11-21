@@ -3,13 +3,12 @@ import {
 	createCamera,
 	createGame,
 	createStage,
-	type StageEntity,
-	type UpdateContext,
 } from '@zylem/game-lib/core';
 import { createZone } from '@zylem/game-lib/entity';
 import { useArrowsForAxes } from '@zylem/game-lib/input';
-import { Platformer3DBehavior, Platformer3DState } from '@zylem/game-lib/behavior';
+import { Platformer3DBehavior, Platformer3DState, type Platformer3DEntity } from '@zylem/game-lib/behavior';
 import {
+	addCameraTarget,
 	playgroundPlane,
 	playgroundActor,
 	playgroundPlatforms,
@@ -18,12 +17,7 @@ import { demoAsset } from '../../assets/manifest';
 
 const skybox = demoAsset('general/skybox-default.png');
 
-/**
- * Loose alias for the player entity in this demo. The actor returned by
- * `playgroundActor` is typed `any`; we intentionally avoid importing the
- * internal `GameEntity` class.
- */
-type DemoPlayer = any;
+type DemoPlayer = ReturnType<typeof playgroundActor> & Partial<Platformer3DEntity>;
 
 /** Matches `playgroundPlatforms()` start platform: center y=1, height 0.5. */
 const START_PLATFORM_TOP_Y = 1 + 0.5 / 2;
@@ -31,7 +25,7 @@ const PLAYER_SPAWN = { x: 0, y: START_PLATFORM_TOP_Y, z: 15.5 };
 
 export default function createDemo() {
 	const groundPlane = playgroundPlane('dirt');
-	const player = playgroundActor('player', undefined, PLAYER_SPAWN) as DemoPlayer & StageEntity;
+	const player: DemoPlayer = playgroundActor('player', undefined, PLAYER_SPAWN);
 
 	const platforms = playgroundPlatforms();
 
@@ -91,12 +85,12 @@ export default function createDemo() {
 	);
 
 	const lastMovement = new Vector3();
-	player.onSetup(({ me }: { me: DemoPlayer }) => {
-		camera.cameraRef.target = me;
+	player.onSetup(({ me }) => {
+		addCameraTarget(camera, me);
 		me.setPosition(PLAYER_SPAWN.x, PLAYER_SPAWN.y, PLAYER_SPAWN.z);
 	});
 
-	player.onUpdate(({ inputs, me }: UpdateContext<any>) => {
+	player.onUpdate(({ inputs, me }) => {
 		const { p1 } = inputs;
 
 		const horizontal = p1.axes.Horizontal.value;

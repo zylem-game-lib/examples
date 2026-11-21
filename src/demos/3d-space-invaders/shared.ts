@@ -1,4 +1,4 @@
-import type { Mesh, Object3D } from 'three';
+import type { Object3D } from 'three';
 import { Vector3 } from 'three';
 
 export type EnemyKind = 'sine' | 'circle' | 'charge';
@@ -155,20 +155,6 @@ export function faceEntity(
 
 export function getModelRoot(entity: { group?: Object3D | null }) {
 	return entity.group?.children[0] ?? null;
-}
-
-export function getFirstMesh(root: unknown): Mesh | null {
-	let resolved: Mesh | null = null;
-	(root as { traverse?: (fn: (child: unknown) => void) => void } | null)?.traverse?.((child) => {
-		if (resolved) {
-			return;
-		}
-
-		if ((child as { isMesh?: boolean }).isMesh) {
-			resolved = child as Mesh;
-		}
-	});
-	return resolved;
 }
 
 export function orientEntityModel(

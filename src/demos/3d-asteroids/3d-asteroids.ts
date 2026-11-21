@@ -249,13 +249,9 @@ export default function createDemo() {
 		muzzleFlash.restart();
 	}
 
-	ship.entity.listen('entity:model:loaded', () => {
-		queueGpuWarmup();
-	});
+	ship.entity.onLoaded(queueGpuWarmup);
 	for (const asteroid of asteroidField.entities) {
-		asteroid.listen('entity:model:loaded', () => {
-			queueGpuWarmup();
-		});
+		asteroid.onLoaded(queueGpuWarmup);
 	}
 
 	ship.entity.onCollision(({ other, globals }) => {

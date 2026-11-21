@@ -9,6 +9,14 @@ overrides:
   '@types/three': 0.187.0
   '@dimforge/rapier3d-compat': 0.11.2
 
+patchedDependencies:
+  '@zylem/behaviors@0.9.0':
+    hash: 7304768d47fb746037828ccc88d405aff079eddf96c79ed5466d3deb77dac0a7
+    path: patches/behaviors-0.9.0.patch
+  '@zylem/ui@0.9.12':
+    hash: d0681c3a914abbb769fc65ed0ddb8b3bac65faa4cd37aa6305da3c67d45f9985
+    path: patches/ui-0.9.12.patch
+
 importers:
 
   .:
@@ -23,23 +31,23 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
       '@zylem/behaviors':
-        specifier: ^0.8.14
-        version: 0.8.14(three@0.187.0)
+        specifier: ^0.9.0
+        version: 0.9.0(patch_hash=7304768d47fb746037828ccc88d405aff079eddf96c79ed5466d3deb77dac0a7)(three@0.187.0)
       '@zylem/bridge':
         specifier: ^0.9.12
         version: 0.9.12
       '@zylem/editor':
         specifier: ^0.9.14
-        version: 0.9.14(@zylem/game-lib@0.9.15(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))
+        version: 0.9.14(@zylem/game-lib@0.11.0(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))
       '@zylem/game-lib':
-        specifier: ^0.9.15
-        version: 0.9.15(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
+        specifier: ^0.11.0
+        version: 0.11.0(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
       '@zylem/shaders':
         specifier: ^0.8.10
         version: 0.8.10(three@0.187.0)
       '@zylem/ui':
         specifier: ^0.9.12
-        version: 0.9.12(solid-js@1.9.14)
+        version: 0.9.12(patch_hash=d0681c3a914abbb769fc65ed0ddb8b3bac65faa4cd37aa6305da3c67d45f9985)(solid-js@1.9.14)
       comlink:
         specifier: ^4.4.2
         version: 4.4.2
@@ -1432,8 +1440,8 @@ packages:
   '@zylem/assets@0.1.1':
     resolution: {integrity: sha512-ALiD4ritqUpH+RQzqPG0YdwTYyWz6/gUXxdQ5XDMqSiOmvKIsU7bVhDh7svRnOaIWtBxV3SrcyLp6uMQwcaEqA==}
 
-  '@zylem/behaviors@0.8.14':
-    resolution: {integrity: sha512-RhZTA5s75qlmb/wHN1einHmAaoh33SKFDUC/djTFqBOLMGgx6wgMMpabgZlTuAzIFKBGN42Ta50tr7Qrfg3o5w==}
+  '@zylem/behaviors@0.9.0':
+    resolution: {integrity: sha512-cpOzLyEX6ulmVn0ySycDJj1X4xzHyJZ8IXlfHwrMIPbllITu2ir1x6HuxYN4l9wUmniczDaXlHcJ6A3LWyxcPQ==}
     engines: {node: '>=22.12.0', pnpm: '>=10.32.1'}
     peerDependencies:
       three: 0.187.0
@@ -1447,16 +1455,16 @@ packages:
     peerDependencies:
       '@zylem/game-lib': ^0.9.15
 
-  '@zylem/game-lib@0.9.15':
-    resolution: {integrity: sha512-3eprRYDALmPGULrd7BOJ7gh4QF7P4VjqxieKI7SB/Qqxp5dIMX/XOkB1DvgJXcNOW411EAYH9pmDdr3o7gg/2A==}
+  '@zylem/game-lib@0.11.0':
+    resolution: {integrity: sha512-7St3PSufb/PywVHQ3dTx8l/8d6Orz0P7fYARnurJwE7e4965N0IjUnwjJckyQfI0ND/xHC8EXitmGRSprc5g3Q==}
     peerDependencies:
       howler: ^2.2.4
       nanoid: ^5.1.5
       three: 0.187.0
       valtio: ^2.1.7
 
-  '@zylem/runtime@0.8.16':
-    resolution: {integrity: sha512-8WVVSXmJGn4dTFCbJfAbqDpWDHX57nosWK3Vgev7GdXWhh2iBuQjZHTIxapG2Si23y53DV7/MZ7zZ6/m3kdcPg==}
+  '@zylem/runtime@0.8.17':
+    resolution: {integrity: sha512-Qn1bxxD5aoTlV8JTTyOoF0Qo4em8qlPBKFHpn/lLA0clg5093SDgjFdUI1SJSljr2jP/QFn2uEAe3VAvg8XNyw==}
     engines: {node: '>=20.10.0'}
 
   '@zylem/shaders@0.8.10':
@@ -3258,10 +3266,10 @@ snapshots:
 
   '@zylem/assets@0.1.1': {}
 
-  '@zylem/behaviors@0.8.14(three@0.187.0)':
+  '@zylem/behaviors@0.9.0(patch_hash=7304768d47fb746037828ccc88d405aff079eddf96c79ed5466d3deb77dac0a7)(three@0.187.0)':
     dependencies:
       '@dgreenheck/three-pinata': 2.0.1(three@0.187.0)
-      '@zylem/runtime': 0.8.16
+      '@zylem/runtime': 0.8.17
       comlink: 4.4.2
       three: 0.187.0
       typescript-fsm: 1.6.0
@@ -3272,13 +3280,13 @@ snapshots:
 
   '@zylem/bridge@0.9.12': {}
 
-  '@zylem/editor@0.9.14(@zylem/game-lib@0.9.15(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))':
+  '@zylem/editor@0.9.14(@zylem/game-lib@0.11.0(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))':
     dependencies:
       '@kobalte/core': 0.13.14(solid-js@1.9.14)
       '@solidjs/router': 0.14.10(solid-js@1.9.14)
       '@zylem/bridge': 0.9.12
-      '@zylem/game-lib': 0.9.15(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
-      '@zylem/ui': 0.9.12(solid-js@1.9.14)
+      '@zylem/game-lib': 0.11.0(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
+      '@zylem/ui': 0.9.12(patch_hash=d0681c3a914abbb769fc65ed0ddb8b3bac65faa4cd37aa6305da3c67d45f9985)(solid-js@1.9.14)
       lucide-solid: 1.73.0(solid-js@1.9.14)
       solid-js: 1.9.14
       valtio: 2.3.2
@@ -3287,14 +3295,14 @@ snapshots:
       - babel-plugin-macros
       - react
 
-  '@zylem/game-lib@0.9.15(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)':
+  '@zylem/game-lib@0.11.0(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)':
     dependencies:
       '@dgreenheck/three-pinata': 2.0.1(three@0.187.0)
       '@pmndrs/sky': 0.6.0(three@0.187.0)
       '@recast-navigation/three': 0.44.0(@types/three@0.187.0)(three@0.187.0)
       '@sinclair/typebox': 0.34.52
       '@types/howler': 2.2.13
-      '@zylem/behaviors': 0.8.14(three@0.187.0)
+      '@zylem/behaviors': 0.9.0(patch_hash=7304768d47fb746037828ccc88d405aff079eddf96c79ed5466d3deb77dac0a7)(three@0.187.0)
       '@zylem/bridge': 0.9.12
       comlink: 4.4.2
       howler: 2.2.4
@@ -3318,7 +3326,7 @@ snapshots:
       - react-dom
       - supports-color
 
-  '@zylem/runtime@0.8.16': {}
+  '@zylem/runtime@0.8.17': {}
 
   '@zylem/shaders@0.8.10(three@0.187.0)':
     dependencies:
@@ -3326,7 +3334,7 @@ snapshots:
       three: 0.187.0
       tsl-textures: 3.0.5
 
-  '@zylem/ui@0.9.12(solid-js@1.9.14)':
+  '@zylem/ui@0.9.12(patch_hash=d0681c3a914abbb769fc65ed0ddb8b3bac65faa4cd37aa6305da3c67d45f9985)(solid-js@1.9.14)':
     dependencies:
       '@kobalte/core': 0.13.14(solid-js@1.9.14)
       '@vanilla-extract/css': 1.21.2

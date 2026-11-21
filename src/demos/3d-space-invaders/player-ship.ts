@@ -5,6 +5,7 @@ import { demoAsset } from '../../assets/manifest';
 
 const fisherShipGlb = demoAsset('general/player-ship.glb');
 import { destructiblePrebakeWorkerUrl } from '../_shared/destructible-prebake-worker-url';
+import { prebakeActorFragments } from '../_shared/prebake-actor-fragments';
 import {
 	ENEMY_BULLET_COLLISION_TYPE,
 	ENEMY_COLLISION_TYPE,
@@ -14,7 +15,6 @@ import {
 	PLAYER_MODEL_YAW_OFFSET,
 	PLAYER_SHIELD_COLLISION_TYPE,
 	PLAYER_START_Y,
-	getFirstMesh,
 	orientEntityModel,
 	setEntityVisibility,
 } from './shared';
@@ -82,40 +82,12 @@ export function createPlayerShip(): PlayerShipRuntime {
 		},
 	});
 
-	let warmedUp = false;
 	let exploded = false;
 
-	const warmupDestructible = () => {
-		if (warmedUp || !ship.mesh) {
-			return;
-		}
-
-		void destructible.prebakeAsync().then(
-			() => {
-				warmedUp = true;
-			},
-			(error) => {
-				console.warn('Failed to warm destructible space invaders player', error);
-			},
-		);
-	};
-
-	const bindPrimaryMesh = () => {
-		const primaryMesh = getFirstMesh(ship.group);
-		if (!primaryMesh) {
-			return;
-		}
-
-		ship.mesh = primaryMesh;
-		warmupDestructible();
-	};
-
-	ship.onSetup(({ me }: any) => {
+	ship.onSetup(({ me }) => {
 		me.body?.setGravityScale(0, true);
 		me.body?.setLinearDamping(0);
 		me.setRotation(0, 0, 0);
-		orientPlayerModel(ship);
-		bindPrimaryMesh();
 	});
 
 	shield.onSetup(({ me }: any) => {
@@ -123,9 +95,9 @@ export function createPlayerShip(): PlayerShipRuntime {
 		setEntityVisibility(shield, false);
 	});
 
-	ship.listen('entity:model:loaded', () => {
-		orientPlayerModel(ship);
-		bindPrimaryMesh();
+	ship.onLoaded(({ me }) => {
+		orientPlayerModel(me);
+		prebakeActorFragments(me, destructible);
 	});
 
 	return {

@@ -1,4 +1,4 @@
-import type { Mesh, Object3D } from 'three';
+import type { Object3D } from 'three';
 import { Vector3 } from 'three';
 
 export type AsteroidSize = 'large' | 'small';
@@ -99,20 +99,6 @@ export function getAsteroidSpeed(size: AsteroidSize, elapsedSeconds: number) {
 	const base = size === 'large' ? 1.2 : 2.0;
 	const variance = size === 'large' ? 1.2 : 1.4;
 	return base + Math.random() * variance + ramp * (size === 'large' ? 1.1 : 1.4);
-}
-
-export function getFirstMesh(root: unknown): Mesh | null {
-	let resolved: Mesh | null = null;
-	(root as { traverse?: (fn: (child: unknown) => void) => void } | null)?.traverse?.((child) => {
-		if (resolved) {
-			return;
-		}
-
-		if ((child as { isMesh?: boolean }).isMesh) {
-			resolved = child as Mesh;
-		}
-	});
-	return resolved;
 }
 
 export function getModelRoot(entity: { group?: Object3D | null }): Object3D | null {

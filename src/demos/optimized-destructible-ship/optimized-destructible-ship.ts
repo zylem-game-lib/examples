@@ -164,21 +164,23 @@ function createShipLane(config: ShipLaneConfig): ShipLaneResult {
 
 	actor.onSetup(({ me }) => {
 		me.setRotation(0, 0, 0);
-		orientDisplayShip(me);
+		runtime.ready = false;
 		statusLabel.updateText('loading');
 	});
 
 	actor.listen('entity:model:loaded', ({ success, meshCount, errorMessage }) => {
-		orientDisplayShip(actor);
-		if (!success) {
+		if (success) {
+			runtime.readyText = `ready • ${formatMeshCount(meshCount)}`;
+		} else {
 			statusLabel.updateText(formatLoadError(errorMessage));
-			return;
 		}
+	});
 
+	actor.onLoaded(({ me }) => {
+		orientDisplayShip(me);
 		void handle.prebakeAsync().then(
 			() => {
 				runtime.ready = true;
-				runtime.readyText = `ready • ${formatMeshCount(meshCount)}`;
 				statusLabel.updateText(runtime.readyText);
 			},
 			(error) => {

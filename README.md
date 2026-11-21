@@ -22,6 +22,8 @@ pnpm dev
 
 Vite serves the app on [http://localhost:9001](http://localhost:9001) by default.
 
+Run `pnpm build` followed by `pnpm preview` to try the production bundle locally. On localhost, Vite proxies demo assets through `/cdn`. The deployed gallery loads them directly from the CDN.
+
 ### Multiplayer (optional)
 
 ```bash
@@ -41,11 +43,14 @@ pnpm server:generate:bindings
 Published `@zylem/*` packages:
 
 - `@zylem/game-lib`
+- `@zylem/behaviors` (used by the destructible geometry worker)
 - `@zylem/editor`
 - `@zylem/ui`
 - `@zylem/shaders`
 - `@zylem/assets`
 - `@zylem/bridge` (direct for Vite/pnpm resolution; also used transitively by game-lib/editor)
+
+The lockfile resolves one copy of `@zylem/game-lib@0.11.0` for the gallery and editor. The published `@zylem/editor@0.9.14` still declares a `^0.9.15` game-lib peer, so pnpm reports a warning. The version-specific patches in `patches/` make the legacy collider field optional in the behaviors types and guard empty slider values in the UI package.
 
 Local engine iteration uses the polyrepo manager (`zw link`) against sibling checkouts under `zylem-projects/`.
 

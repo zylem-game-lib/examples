@@ -202,7 +202,7 @@ const ExampleRunner: Component<DemoViewerProps> = (props) => {
                   ref={gameRef}
                   class={styles.screenshotGame}
                   data-demo-screenshot-target
-                  data-demo-id={appStore.activeExample?.id ?? ''}
+                  attr:data-demo-id={appStore.activeExample?.id ?? ''}
                   style={screenshotGameStyle()}
                   game={example()}
                   viewport-profile={demoViewportStore.viewportProfile}
@@ -241,7 +241,7 @@ const ExampleRunner: Component<DemoViewerProps> = (props) => {
                       <zylem-game
                         ref={gameRef}
                         class="block h-full w-full"
-                        data-demo-id={appStore.activeExample?.id ?? ''}
+                        attr:data-demo-id={appStore.activeExample?.id ?? ''}
                         game={example()}
                         viewport-profile={activeViewportProfile()}
                       />
@@ -281,7 +281,7 @@ const ExampleRunner: Component<DemoViewerProps> = (props) => {
                   <zylem-game
                     ref={gameRef}
                     class="block h-full w-full"
-                    data-demo-id={appStore.activeExample?.id ?? ''}
+                    attr:data-demo-id={appStore.activeExample?.id ?? ''}
                     game={example()}
                     viewport-profile={activeViewportProfile()}
                   />
