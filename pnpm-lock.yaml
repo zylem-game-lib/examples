@@ -1460,8 +1460,8 @@ packages:
       three: 0.187.0
       valtio: ^2.1.7
 
-  '@zylem/runtime@0.8.18':
-    resolution: {integrity: sha512-F538fF2gp50onxN8fVaabCyw6P27LqBCa+WK+C9YEb7TdRL0oi4mMTRDXsObS7kCqM0xvD6fy4/tm1vfowT7EQ==}
+  '@zylem/runtime@0.8.19':
+    resolution: {integrity: sha512-R1y0jnxuZrVWOcVkHwCLNsxPLhsLF6JKiJswYSIHRcRMHw/fSA4Y64FwAntyQrTjIpMcWjEJz2e45be2+t59ZQ==}
     engines: {node: '>=20.10.0'}
 
   '@zylem/shaders@0.8.10':
@@ -3266,7 +3266,7 @@ snapshots:
   '@zylem/behaviors@0.9.1(three@0.187.0)':
     dependencies:
       '@dgreenheck/three-pinata': 2.0.1(three@0.187.0)
-      '@zylem/runtime': 0.8.18
+      '@zylem/runtime': 0.8.19
       comlink: 4.4.2
       three: 0.187.0
       typescript-fsm: 1.6.0
@@ -3323,7 +3323,7 @@ snapshots:
       - react-dom
       - supports-color
 
-  '@zylem/runtime@0.8.18': {}
+  '@zylem/runtime@0.8.19': {}
 
   '@zylem/shaders@0.8.10(three@0.187.0)':
     dependencies:
