@@ -56,7 +56,7 @@ export default function createDemo() {
 	});
 
 	const platformer = player.use(Platformer3DBehavior, movement);
-	// This demo can also run against the currently published kinematic controller.
+	// A locally linked controller can predate the proximity query.
 	const queryNearby = 'getNearbyBodySlots' in platformer && typeof platformer.getNearbyBodySlots === 'function'
 		? platformer.getNearbyBodySlots
 		: undefined;

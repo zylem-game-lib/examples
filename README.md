@@ -50,7 +50,7 @@ Published `@zylem/*` packages:
 - `@zylem/assets`
 - `@zylem/bridge` (direct for Vite/pnpm resolution; also used transitively by game-lib/editor)
 
-The lockfile resolves one copy of `@zylem/game-lib@0.11.0` for the gallery and editor. The published `@zylem/editor@0.9.14` still declares a `^0.9.15` game-lib peer, so pnpm reports a warning. The version-specific patches in `patches/` make the legacy collider field optional in the behaviors types and guard empty slider values in the UI package.
+The gallery and editor share `@zylem/game-lib@0.11.1`. Third Person Test uses `@zylem/behaviors@0.9.1` and `@zylem/runtime@0.8.18` for its dynamic capsule. The published `@zylem/editor@0.9.14` still declares a `^0.9.15` game-lib peer, so pnpm reports a warning. The patch for `@zylem/ui@0.9.12` guards empty slider values.
 
 Local engine iteration uses the polyrepo manager (`zw link`) against sibling checkouts under `zylem-projects/`.
 
