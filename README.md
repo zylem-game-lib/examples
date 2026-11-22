@@ -50,7 +50,7 @@ Published `@zylem/*` packages:
 - `@zylem/assets`
 - `@zylem/bridge` (direct for Vite/pnpm resolution; also used transitively by game-lib/editor)
 
-The gallery and editor share `@zylem/game-lib@0.11.1`. Third Person Test uses `@zylem/behaviors@0.9.1` and `@zylem/runtime@0.8.19` for its dynamic capsule. The published `@zylem/editor@0.9.14` still declares a `^0.9.15` game-lib peer, so pnpm reports a warning. The patch for `@zylem/ui@0.9.12` guards empty slider values.
+The gallery and editor share `@zylem/game-lib@0.11.2`. Third Person Test uses `@zylem/behaviors@0.9.2` and `@zylem/runtime@0.8.19` for its dynamic capsule on Rapier 0.36.1. The published `@zylem/editor@0.9.14` still declares a `^0.9.15` game-lib peer, so pnpm reports a warning. The patch for `@zylem/ui@0.9.12` guards empty slider values.
 
 Local engine iteration uses the polyrepo manager (`zw link`) against sibling checkouts under `zylem-projects/`.
 
