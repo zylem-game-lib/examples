@@ -35,10 +35,10 @@ importers:
         version: 0.9.12
       '@zylem/editor':
         specifier: ^0.9.14
-        version: 0.9.14(@zylem/game-lib@0.11.2(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))
+        version: 0.9.14(@zylem/game-lib@0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))
       '@zylem/game-lib':
-        specifier: ^0.11.2
-        version: 0.11.2(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
+        specifier: ^0.11.3
+        version: 0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
       '@zylem/shaders':
         specifier: ^0.8.10
         version: 0.8.10(three@0.187.0)
@@ -187,8 +187,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/runtime@7.29.13':
-    resolution: {integrity: sha512-v+oN26xP4YIlQsbQ/CbTH1WG5m/l/DjKKZNy/Kp3f/AFvbgt7Em/D0FeMM3O2hX0YzeN2M16W8lOpyhIkfCBcQ==}
+  '@babel/runtime@7.29.15':
+    resolution: {integrity: sha512-304gsbbGVmQc+cNGHzwHBlqepYdWLKj3VXCQBGt/EGcV7PUPfKI7kAUNW1FZEOCwlQiLvQjg1JEaAlRQ616h+Q==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.29.7':
@@ -1452,8 +1452,8 @@ packages:
     peerDependencies:
       '@zylem/game-lib': ^0.9.15
 
-  '@zylem/game-lib@0.11.2':
-    resolution: {integrity: sha512-Q8NS5DGz9y2dWCjzMBRgmIzB73pBHHhKmJn9E+vbg6xmT4jK3wJcIG01goFMRptFI6ggkET1PAB5RgZ1Zr1XKA==}
+  '@zylem/game-lib@0.11.3':
+    resolution: {integrity: sha512-M0fDlWhcDJSw1PP/jAsZVDeWFeVgzxhTYLh6H3/h3m8e4dB/dHVHrcQq7dAWBYYAjVMuK3u90YH//1UGGEv6tw==}
     peerDependencies:
       howler: ^2.2.4
       nanoid: ^5.1.5
@@ -2028,8 +2028,8 @@ packages:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
 
-  tone@15.5.66:
-    resolution: {integrity: sha512-IfhfkkdIOncjSQa8efsDWK38myptQEcV77B+vB9MA/b2sldHdBx4wE64YLdyxtZVuJxvFwn8nj7X6QvchxSN9A==}
+  tone@15.5.73:
+    resolution: {integrity: sha512-00hW7pZltYj6jA2sKD/aPJ7p0uQ/PReRESn046OPWymsYSWS5uMP7BVgpPDIGGyVc/jO9PNkoiiIu04pPTxnTw==}
 
   tsl-textures@3.0.5:
     resolution: {integrity: sha512-bxuQ31fZDjO4KZIb5X7Pf1Ajhsl15lxu+xNGQ+7JPHBmv0KvQ+V5NnWSxOdp798K7M723qiNaFmHJddUaSXFcw==}
@@ -2347,7 +2347,7 @@ snapshots:
       '@babel/core': 7.29.7
       '@babel/helper-plugin-utils': 7.29.7
 
-  '@babel/runtime@7.29.13': {}
+  '@babel/runtime@7.29.15': {}
 
   '@babel/runtime@7.29.7': {}
 
@@ -3277,12 +3277,12 @@ snapshots:
 
   '@zylem/bridge@0.9.12': {}
 
-  '@zylem/editor@0.9.14(@zylem/game-lib@0.11.2(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))':
+  '@zylem/editor@0.9.14(@zylem/game-lib@0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))':
     dependencies:
       '@kobalte/core': 0.13.14(solid-js@1.9.14)
       '@solidjs/router': 0.14.10(solid-js@1.9.14)
       '@zylem/bridge': 0.9.12
-      '@zylem/game-lib': 0.11.2(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
+      '@zylem/game-lib': 0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
       '@zylem/ui': 0.9.12(patch_hash=d0681c3a914abbb769fc65ed0ddb8b3bac65faa4cd37aa6305da3c67d45f9985)(solid-js@1.9.14)
       lucide-solid: 1.73.0(solid-js@1.9.14)
       solid-js: 1.9.14
@@ -3292,7 +3292,7 @@ snapshots:
       - babel-plugin-macros
       - react
 
-  '@zylem/game-lib@0.11.2(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)':
+  '@zylem/game-lib@0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)':
     dependencies:
       '@dgreenheck/three-pinata': 2.0.1(three@0.187.0)
       '@pmndrs/sky': 0.6.0(three@0.187.0)
@@ -3309,7 +3309,7 @@ snapshots:
       recast-navigation: 0.44.0
       stats.js: 0.17.0
       three: 0.187.0
-      tone: 15.5.66
+      tone: 15.5.73
       typescript-fsm: 1.6.0
       valtio: 2.3.2
     optionalDependencies:
@@ -3347,7 +3347,7 @@ snapshots:
 
   automation-events@7.1.19:
     dependencies:
-      '@babel/runtime': 7.29.13
+      '@babel/runtime': 7.29.15
       tslib: 2.9.1
 
   babel-plugin-jsx-dom-expressions@0.40.7(@babel/core@7.29.7):
@@ -3901,7 +3901,7 @@ snapshots:
 
   standardized-audio-context@25.3.77:
     dependencies:
-      '@babel/runtime': 7.29.13
+      '@babel/runtime': 7.29.15
       automation-events: 7.1.19
       tslib: 2.9.1
 
@@ -3918,7 +3918,7 @@ snapshots:
       fdir: 6.5.0(picomatch@4.0.5)
       picomatch: 4.0.5
 
-  tone@15.5.66:
+  tone@15.5.73:
     dependencies:
       standardized-audio-context: 25.3.77
       tslib: 2.9.1
