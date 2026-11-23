@@ -35,10 +35,10 @@ importers:
         version: 0.9.12
       '@zylem/editor':
         specifier: ^0.9.14
-        version: 0.9.14(@zylem/game-lib@0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))
+        version: 0.9.14(@zylem/game-lib@0.11.4(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))
       '@zylem/game-lib':
-        specifier: ^0.11.3
-        version: 0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
+        specifier: ^0.11.4
+        version: 0.11.4(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
       '@zylem/shaders':
         specifier: ^0.8.10
         version: 0.8.10(three@0.187.0)
@@ -1452,8 +1452,8 @@ packages:
     peerDependencies:
       '@zylem/game-lib': ^0.9.15
 
-  '@zylem/game-lib@0.11.3':
-    resolution: {integrity: sha512-M0fDlWhcDJSw1PP/jAsZVDeWFeVgzxhTYLh6H3/h3m8e4dB/dHVHrcQq7dAWBYYAjVMuK3u90YH//1UGGEv6tw==}
+  '@zylem/game-lib@0.11.4':
+    resolution: {integrity: sha512-7jPpvHNc+fvwyPmPYs7QronoWsw4Hm7A53ijHR3CEtcTRMK/UVz8NTGB9jx0D423HurCLPMnY3Pt/LdP41unPQ==}
     peerDependencies:
       howler: ^2.2.4
       nanoid: ^5.1.5
@@ -3277,12 +3277,12 @@ snapshots:
 
   '@zylem/bridge@0.9.12': {}
 
-  '@zylem/editor@0.9.14(@zylem/game-lib@0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))':
+  '@zylem/editor@0.9.14(@zylem/game-lib@0.11.4(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2))':
     dependencies:
       '@kobalte/core': 0.13.14(solid-js@1.9.14)
       '@solidjs/router': 0.14.10(solid-js@1.9.14)
       '@zylem/bridge': 0.9.12
-      '@zylem/game-lib': 0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
+      '@zylem/game-lib': 0.11.4(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
       '@zylem/ui': 0.9.12(patch_hash=d0681c3a914abbb769fc65ed0ddb8b3bac65faa4cd37aa6305da3c67d45f9985)(solid-js@1.9.14)
       lucide-solid: 1.73.0(solid-js@1.9.14)
       solid-js: 1.9.14
@@ -3292,7 +3292,7 @@ snapshots:
       - babel-plugin-macros
       - react
 
-  '@zylem/game-lib@0.11.3(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)':
+  '@zylem/game-lib@0.11.4(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)':
     dependencies:
       '@dgreenheck/three-pinata': 2.0.1(three@0.187.0)
       '@pmndrs/sky': 0.6.0(three@0.187.0)
