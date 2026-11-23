@@ -2,6 +2,10 @@ import { Component, Show } from 'solid-js';
 import { useLocation } from '@solidjs/router';
 import type { RouteSectionProps } from '@solidjs/router';
 import { ZylemGameElement } from '@zylem/game-lib/web-components';
+import {
+  registerBuiltInBehaviorSwatchSources,
+  registerBuiltInEntityTypes,
+} from '@zylem/game-lib/catalog';
 import { registerZylemEditor } from '@zylem/editor';
 import { BuildLabel } from '@zylem/ui/components';
 import { ZYLEM_PACKAGE_VERSIONS } from 'virtual:zylem-versions';
@@ -15,6 +19,8 @@ import { editorOverlay } from './App.css';
 if (!customElements.get('zylem-game')) {
   customElements.define('zylem-game', ZylemGameElement);
 }
+registerBuiltInEntityTypes();
+registerBuiltInBehaviorSwatchSources();
 registerZylemEditor();
 
 declare module 'solid-js' {
