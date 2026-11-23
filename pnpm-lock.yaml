@@ -40,8 +40,8 @@ importers:
         specifier: ^0.11.4
         version: 0.11.4(@types/three@0.187.0)(howler@2.2.4)(nanoid@5.1.16)(playcanvas@2.23.3)(three@0.187.0)(valtio@2.3.2)
       '@zylem/shaders':
-        specifier: ^0.8.10
-        version: 0.8.10(three@0.187.0)
+        specifier: ^0.8.11
+        version: 0.8.11(three@0.187.0)
       '@zylem/ui':
         specifier: ^0.9.12
         version: 0.9.12(patch_hash=d0681c3a914abbb769fc65ed0ddb8b3bac65faa4cd37aa6305da3c67d45f9985)(solid-js@1.9.14)
@@ -1464,8 +1464,8 @@ packages:
     resolution: {integrity: sha512-R1y0jnxuZrVWOcVkHwCLNsxPLhsLF6JKiJswYSIHRcRMHw/fSA4Y64FwAntyQrTjIpMcWjEJz2e45be2+t59ZQ==}
     engines: {node: '>=20.10.0'}
 
-  '@zylem/shaders@0.8.10':
-    resolution: {integrity: sha512-XkaoWl+BqLsmDKL+6WXa0igfIlsttTRuJzjoOR+gTxk/fNuLzD20gTDcgcTwWu558hKMsqYKWbY4DnZ2XA0xYA==}
+  '@zylem/shaders@0.8.11':
+    resolution: {integrity: sha512-fWg9LMEn6YTnNMc8q7pgPMsTiTW+CDBx0y58IbUEPQ92uhT1X20x6w3MVrIYgtfY6lvFVhhy5Dr+AGRma7HhiA==}
     engines: {node: '>=22.12.0', pnpm: '>=10.32.1'}
     peerDependencies:
       three: 0.187.0
@@ -3325,7 +3325,7 @@ snapshots:
 
   '@zylem/runtime@0.8.19': {}
 
-  '@zylem/shaders@0.8.10(three@0.187.0)':
+  '@zylem/shaders@0.8.11(three@0.187.0)':
     dependencies:
       '@types/tsl-textures': 3.0.0
       three: 0.187.0

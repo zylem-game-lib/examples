@@ -43,7 +43,7 @@
     "@zylem/bridge": "^0.9.12",
     "@zylem/editor": "^0.9.14",
     "@zylem/game-lib": "^0.11.4",
-    "@zylem/shaders": "^0.8.10",
+    "@zylem/shaders": "^0.8.11",
     "@zylem/ui": "^0.9.12",
     "comlink": "^4.4.2",
     "howler": "^2.2.4",
